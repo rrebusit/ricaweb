@@ -1,7 +1,9 @@
 ---
-title: "Hello There"
+title: "My Introduction"
 ---
 
-Welcome to my website! 
+Welcome to my website! Thank you for viewing
 
-Here you can see all the awesome projects I'm working on. 
+Here you can see all the awesome projects I'm working on. Pretty cool!
+
+Here is step 6 making a change.
