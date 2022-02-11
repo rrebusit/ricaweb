@@ -12,12 +12,12 @@
 <meta name="author" content="Rica Rebusit" />
 
 
-<title>project.Rmd</title>
+<title>Blog #1 - Linear Algebra in Data Science</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/darkly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -247,13 +247,22 @@ $(document).ready(function () {
         <li>
   <a href="index.html">Home</a>
 </li>
-<li>
-  <a href="project.html">Blog Post</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Blog Posts
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="blog.html">First Blog</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/">
+  <a href="https://github.com/rrebusit">
     <span class="fa fa-github"></span>
      
     Github
@@ -268,31 +277,63 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">project.Rmd</h1>
+<h1 class="title toc-ignore">Blog #1 - Linear Algebra in Data Science</h1>
 <h4 class="author">Rica Rebusit</h4>
-<h4 class="date">1/31/2022</h4>
+<h4 class="date">2/10/2022</h4>
 
 </div>
 
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+<p>I enjoy math and I am not a very computer science-y person. A topic of math I enjoy a lot is linear algebra. My first experience with linear algebra was in my second semester here at Chico State. So I was pleasantly surprised that it had a useful role in data science. So now, I want to learn more about it and how to implement it since it is important in machine learning, which is a topic I am not very knowledgeable about.</p>
+<div id="some-basics-of-linear-algebra" class="section level2">
+<h2>Some Basics of Linear Algebra</h2>
+<p>Inverse: It is like the “reciprocal of a matrix” where when a square (nxn) matrix is multiplied by its inverse to result in the identity matrix</p>
+<pre class="r"><code>A &lt;- matrix(c(7,2,8,5), nrow=2, byrow=T) #Original Matrix
+A</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    7    2
+## [2,]    8    5</code></pre>
+<pre class="r"><code>A.inv &lt;- solve(A) #Inverse Matrix
+A.inv</code></pre>
+<pre><code>##            [,1]       [,2]
+## [1,]  0.2631579 -0.1052632
+## [2,] -0.4210526  0.3684211</code></pre>
+<pre class="r"><code>A %*% A.inv #Identity Matrix</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    0
+## [2,]    0    1</code></pre>
+<p>Transpose: Switching the rows and columns a nxm matrix to result in a mxn matrix</p>
+<pre class="r"><code>A &lt;- matrix(c(2,7,9,11,0,5), nrow=2, ncol=3, byrow=T) #Original Matrix
+A</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    2    7    9
+## [2,]   11    0    5</code></pre>
+<pre class="r"><code>A.T &lt;- t(A) #Matrix Transposed
+A.T</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    2   11
+## [2,]    7    0
+## [3,]    9    5</code></pre>
 </div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="project_files/figure-html/pressure-1.png" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<div id="covariance-matrix" class="section level2">
+<h2>Covariance Matrix</h2>
+<p>A thing I learned now is the covariance matrix. It is an important matrix in machine learning and it shows us the correlation between variables</p>
+<pre class="r"><code>data(&quot;USArrests&quot;)
+head(USArrests)</code></pre>
+<pre><code>##            Murder Assault UrbanPop Rape
+## Alabama      13.2     236       58 21.2
+## Alaska       10.0     263       48 44.5
+## Arizona       8.1     294       80 31.0
+## Arkansas      8.8     190       50 19.5
+## California    9.0     276       91 40.6
+## Colorado      7.9     204       78 38.7</code></pre>
+<pre class="r"><code>cov(USArrests)</code></pre>
+<pre><code>##              Murder   Assault   UrbanPop      Rape
+## Murder    18.970465  291.0624   4.386204  22.99141
+## Assault  291.062367 6945.1657 312.275102 519.26906
+## UrbanPop   4.386204  312.2751 209.518776  55.76808
+## Rape      22.991412  519.2691  55.768082  87.72916</code></pre>
+<p>In this example, the diagonals of the matrix represent the variance and the other values represent the covariance</p>
 </div>
 
 

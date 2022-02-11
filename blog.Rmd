@@ -1,0 +1,42 @@
+---
+title: "Blog #1 - Linear Algebra in Data Science"
+author: "Rica Rebusit"
+date: "2/10/2022"
+output:
+  html_document:
+    theme: darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+```
+I enjoy math and I am not a very computer science-y person. A topic of math I enjoy a lot is linear algebra. My first experience with linear algebra was in my second semester here at Chico State. So I was pleasantly surprised that it had a useful role in data science. So now, I want to learn more about it and how to implement it since it is important in machine learning, which is a topic I am not very knowledgeable about. 
+
+## Some Basics of Linear Algebra
+Inverse: It is like the "reciprocal of a matrix" where when a square (nxn) matrix is multiplied by its inverse to result in the identity matrix
+```{r}
+A <- matrix(c(7,2,8,5), nrow=2, byrow=T) #Original Matrix
+A
+A.inv <- solve(A) #Inverse Matrix
+A.inv
+A %*% A.inv #Identity Matrix
+```
+
+Transpose: Switching the rows and columns a nxm matrix to result in a mxn matrix
+```{r}
+A <- matrix(c(2,7,9,11,0,5), nrow=2, ncol=3, byrow=T) #Original Matrix
+A
+A.T <- t(A) #Matrix Transposed
+A.T
+```
+
+## Covariance Matrix
+A thing I learned now is the covariance matrix. It is an important matrix in machine learning and it shows us the correlation between variables
+```{r}
+data("USArrests")
+head(USArrests)
+cov(USArrests)
+```
+In this example, the diagonals of the matrix represent the variance and the other values represent the covariance 

@@ -4,6 +4,7 @@ title: "My Introduction"
 
 Welcome to my website! Thank you for viewing
 
-Here you can see all the awesome projects I'm working on. Pretty cool!
-
-Here is step 6 making a change.
+## Some things about me: 
+I am an Applied Math major with hopes in becoming a data scientist
+I have many hobbies that include traveling, playing the ukulele, playing basketball, and watching anime
+etc... to be continued

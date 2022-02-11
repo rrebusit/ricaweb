@@ -1,13 +1,15 @@
 name: "Rica's Website"
 output_dir: "."
 navbar:
-  title: "Rica Data Science"
+  title: "Rica Rebusit"
   left:
     - text: "Home"
       href: index.html
+    - text: "Blog Posts"
+      menue:
+      - text: "First Blog"
+        href: blog.html
   right:
     - text: "Github"
       icon: fa-github
-      href: https://github.com/
-    - text: "My Projects"
-      href: project.html
+      href: https://github.com/rrebusit
