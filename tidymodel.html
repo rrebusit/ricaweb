@@ -12,7 +12,7 @@
 <meta name="author" content="Rica Rebusit" />
 
 
-<title>Blog #1 - Linear Algebra in Data Science</title>
+<title>Tidy Models Tutorial</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -280,63 +280,128 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Blog #1 - Linear Algebra in Data Science</h1>
+<h1 class="title toc-ignore">Tidy Models Tutorial</h1>
 <h4 class="author">Rica Rebusit</h4>
-<h4 class="date">2/10/2022</h4>
+<h4 class="date">3/20/2022</h4>
 
 </div>
 
 
-<p>I enjoy math and I am not a very computer science-y person. A topic of math I enjoy a lot is linear algebra. My first experience with linear algebra was in my second semester here at Chico State. So I was pleasantly surprised that it had a useful role in data science. So now, I want to learn more about it and how to implement it since it is important in machine learning, which is a topic I am not very knowledgeable about.</p>
-<div id="some-basics-of-linear-algebra" class="section level2">
-<h2>Some Basics of Linear Algebra</h2>
-<p>Inverse: It is like the “reciprocal of a matrix” where when a square (nxn) matrix is multiplied by its inverse to result in the identity matrix</p>
-<pre class="r"><code>A &lt;- matrix(c(7,2,8,5), nrow=2, byrow=T) #Original Matrix
-A</code></pre>
-<pre><code>##      [,1] [,2]
-## [1,]    7    2
-## [2,]    8    5</code></pre>
-<pre class="r"><code>A.inv &lt;- solve(A) #Inverse Matrix
-A.inv</code></pre>
-<pre><code>##            [,1]       [,2]
-## [1,]  0.2631579 -0.1052632
-## [2,] -0.4210526  0.3684211</code></pre>
-<pre class="r"><code>A %*% A.inv #Identity Matrix</code></pre>
-<pre><code>##      [,1] [,2]
-## [1,]    1    0
-## [2,]    0    1</code></pre>
-<p>Transpose: Switching the rows and columns a nxm matrix to result in a mxn matrix</p>
-<pre class="r"><code>A &lt;- matrix(c(2,7,9,11,0,5), nrow=2, ncol=3, byrow=T) #Original Matrix
-A</code></pre>
-<pre><code>##      [,1] [,2] [,3]
-## [1,]    2    7    9
-## [2,]   11    0    5</code></pre>
-<pre class="r"><code>A.T &lt;- t(A) #Matrix Transposed
-A.T</code></pre>
-<pre><code>##      [,1] [,2]
-## [1,]    2   11
-## [2,]    7    0
-## [3,]    9    5</code></pre>
+<div id="get-set-up" class="section level2">
+<h2>Get set up</h2>
+<p>This blog post is a tutorial to teach you how to fit a simple linear regression using <strong>tidymodels</strong>. So first, you will need to install the tidymodels package by typing <strong>install.packages(“tidymodels”)</strong> in the console. If you don’t have it already, you will also need to install the <strong>ggplot2</strong> and <strong>dplyr</strong> packages. Now that you have those packages installed, you will now want to load it in by typing <strong>library()</strong></p>
+<pre class="r"><code>library(tidymodels)</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;tune&#39;:
+##   method                   from   
+##   required_pkgs.model_spec parsnip</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────── tidymodels 0.1.4 ──</code></pre>
+<pre><code>## ✓ broom        0.7.12     ✓ rsample      0.1.1 
+## ✓ dials        0.1.0      ✓ tune         0.1.6 
+## ✓ infer        1.0.0      ✓ workflows    0.2.4 
+## ✓ modeldata    0.1.1      ✓ workflowsets 0.1.0 
+## ✓ parsnip      0.1.7      ✓ yardstick    0.0.9 
+## ✓ recipes      0.1.17</code></pre>
+<pre><code>## Warning: package &#39;broom&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## Warning: package &#39;dials&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+## x scales::discard() masks purrr::discard()
+## x dplyr::filter()   masks stats::filter()
+## x recipes::fixed()  masks stringr::fixed()
+## x dplyr::lag()      masks stats::lag()
+## x yardstick::spec() masks readr::spec()
+## x recipes::step()   masks stats::step()
+## • Learn how to get started at https://www.tidymodels.org/start/</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(dplyr)</code></pre>
+<p>Let’s load the data. You can get it from here: <a href="https://www.kaggle.com/datasets/rodolfomendes/abalone-dataset">Abalone Data Set</a></p>
+<pre class="r"><code>abalone &lt;- read.csv(&quot;~/Downloads/abalone.csv&quot;)
+head(abalone)</code></pre>
+<pre><code>##   Sex Length Diameter Height Whole.weight Shucked.weight Viscera.weight
+## 1   M  0.455    0.365  0.095       0.5140         0.2245         0.1010
+## 2   M  0.350    0.265  0.090       0.2255         0.0995         0.0485
+## 3   F  0.530    0.420  0.135       0.6770         0.2565         0.1415
+## 4   M  0.440    0.365  0.125       0.5160         0.2155         0.1140
+## 5   I  0.330    0.255  0.080       0.2050         0.0895         0.0395
+## 6   I  0.425    0.300  0.095       0.3515         0.1410         0.0775
+##   Shell.weight Rings
+## 1        0.150    15
+## 2        0.070     7
+## 3        0.210     9
+## 4        0.155    10
+## 5        0.055     7
+## 6        0.120     8</code></pre>
 </div>
-<div id="covariance-matrix" class="section level2">
-<h2>Covariance Matrix</h2>
-<p>A thing I learned now is the covariance matrix. It is an important matrix in machine learning and it shows us the correlation between variables</p>
-<pre class="r"><code>data(&quot;USArrests&quot;)
-head(USArrests)</code></pre>
-<pre><code>##            Murder Assault UrbanPop Rape
-## Alabama      13.2     236       58 21.2
-## Alaska       10.0     263       48 44.5
-## Arizona       8.1     294       80 31.0
-## Arkansas      8.8     190       50 19.5
-## California    9.0     276       91 40.6
-## Colorado      7.9     204       78 38.7</code></pre>
-<pre class="r"><code>cov(USArrests)</code></pre>
-<pre><code>##              Murder   Assault   UrbanPop      Rape
-## Murder    18.970465  291.0624   4.386204  22.99141
-## Assault  291.062367 6945.1657 312.275102 519.26906
-## UrbanPop   4.386204  312.2751 209.518776  55.76808
-## Rape      22.991412  519.2691  55.768082  87.72916</code></pre>
-<p>In this example, the diagonals of the matrix represent the variance and the other values represent the covariance</p>
+<div id="making-the-linear-regression" class="section level2">
+<h2>Making the linear regression</h2>
+<p>With this data set we can try to find the relationship of our response variable <strong>Rings</strong> which represents age and a predictor, let’s choose <strong>Diameter</strong>. Make a scatter plot of these variables.</p>
+<pre class="r"><code>ggplot(abalone, aes(Diameter, Rings)) + geom_point()</code></pre>
+<p><img src="tidymodel_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Create a parsnip for the model. This provides tidy, unified interface.</p>
+<pre class="r"><code>par.spec &lt;- linear_reg() %&gt;%
+  set_mode(&quot;regression&quot;) %&gt;%
+  set_engine(&quot;lm&quot;)</code></pre>
+<p>Now we can fit a model <strong>y~x</strong> on our response variable <strong>Rings</strong> as y and predictor variable <strong>Diameter</strong> as x</p>
+<pre class="r"><code>lm.fit &lt;- par.spec %&gt;% # The specification from the previous step
+  fit(Rings ~ Diameter, data=abalone)
+lm.fit</code></pre>
+<pre><code>## parsnip model object
+## 
+## Fit time:  6ms 
+## 
+## Call:
+## stats::lm(formula = Rings ~ Diameter, data = data)
+## 
+## Coefficients:
+## (Intercept)     Diameter  
+##       2.319       18.670</code></pre>
+<p>We can now use this model to look at various aspects such as the parameters using <strong>tidy()</strong>, the statistics using <strong>glance()</strong>, and the predictions using <strong>predict()</strong></p>
+<pre class="r"><code>tidy(lm.fit)</code></pre>
+<pre><code>## # A tibble: 2 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)     2.32     0.173      13.4 3.01e-40
+## 2 Diameter       18.7      0.411      45.4 0</code></pre>
+<pre class="r"><code>glance(lm.fit)</code></pre>
+<pre><code>## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic p.value    df logLik    AIC    BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1     0.330         0.330  2.64     2059.       0     1 -9979. 19964. 19983.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+<pre class="r"><code>predict(lm.fit, new_data=abalone)</code></pre>
+<pre><code>## # A tibble: 4,177 × 1
+##    .pred
+##    &lt;dbl&gt;
+##  1  9.13
+##  2  7.27
+##  3 10.2 
+##  4  9.13
+##  5  7.08
+##  6  7.92
+##  7 10.1 
+##  8 10.3 
+##  9  9.23
+## 10 10.5 
+## # … with 4,167 more rows</code></pre>
+<p>If you want to look at the predictions of Rings you can make a tibble of <strong>Rings</strong> and <strong>.pred</strong> the predictions</p>
+<pre class="r"><code>bind_cols(
+  predict(lm.fit, new_data=abalone), abalone
+) %&gt;%
+  select(Rings, .pred)</code></pre>
+<pre><code>## # A tibble: 4,177 × 2
+##    Rings .pred
+##    &lt;int&gt; &lt;dbl&gt;
+##  1    15  9.13
+##  2     7  7.27
+##  3     9 10.2 
+##  4    10  9.13
+##  5     7  7.08
+##  6     8  7.92
+##  7    20 10.1 
+##  8    16 10.3 
+##  9     9  9.23
+## 10    19 10.5 
+## # … with 4,167 more rows</code></pre>
+<p>And there you have it! A simple quick run through of a simple linear regression using <strong>tidymodels</strong></p>
 </div>
 
 

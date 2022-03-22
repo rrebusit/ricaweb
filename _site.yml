@@ -9,6 +9,8 @@ navbar:
       menue:
       - text: "First Blog"
         href: blog.html
+      - text: "Tidy Model Tutorial"
+        href: tidymodel.html
   right:
     - text: "Github"
       icon: fa-github

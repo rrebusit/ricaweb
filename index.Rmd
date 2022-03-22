@@ -5,6 +5,6 @@ title: "My Introduction"
 Welcome to my website! Thank you for viewing
 
 ## Some things about me: 
-I am an Applied Math major with hopes in becoming a data scientist
+I am an Applied Math major
 I have many hobbies that include traveling, playing the ukulele, playing basketball, and watching anime
 etc... to be continued
