@@ -14,7 +14,7 @@
 
 <title>Tidy Models Tutorial</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/darkly.min.css" rel="stylesheet" />
@@ -63,6 +63,7 @@ if (window.hljs) {
 
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -83,6 +84,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -235,7 +239,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -248,7 +252,7 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Blog Posts
      
     <span class="caret"></span>
@@ -259,6 +263,9 @@ $(document).ready(function () {
     </li>
     <li>
       <a href="tidymodel.html">Tidy Model Tutorial</a>
+    </li>
+    <li>
+      <a href="classification.html">Classification</a>
     </li>
   </ul>
 </li>
@@ -290,28 +297,8 @@ $(document).ready(function () {
 <div id="get-set-up" class="section level2">
 <h2>Get set up</h2>
 <p>This blog post is a tutorial to teach you how to fit a simple linear regression using <strong>tidymodels</strong>. So first, you will need to install the tidymodels package by typing <strong>install.packages(“tidymodels”)</strong> in the console. If you don’t have it already, you will also need to install the <strong>ggplot2</strong> and <strong>dplyr</strong> packages. Now that you have those packages installed, you will now want to load it in by typing <strong>library()</strong></p>
-<pre class="r"><code>library(tidymodels)</code></pre>
-<pre><code>## Registered S3 method overwritten by &#39;tune&#39;:
-##   method                   from   
-##   required_pkgs.model_spec parsnip</code></pre>
-<pre><code>## ── Attaching packages ────────────────────────────────────── tidymodels 0.1.4 ──</code></pre>
-<pre><code>## ✓ broom        0.7.12     ✓ rsample      0.1.1 
-## ✓ dials        0.1.0      ✓ tune         0.1.6 
-## ✓ infer        1.0.0      ✓ workflows    0.2.4 
-## ✓ modeldata    0.1.1      ✓ workflowsets 0.1.0 
-## ✓ parsnip      0.1.7      ✓ yardstick    0.0.9 
-## ✓ recipes      0.1.17</code></pre>
-<pre><code>## Warning: package &#39;broom&#39; was built under R version 4.1.2</code></pre>
-<pre><code>## Warning: package &#39;dials&#39; was built under R version 4.1.2</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
-## x scales::discard() masks purrr::discard()
-## x dplyr::filter()   masks stats::filter()
-## x recipes::fixed()  masks stringr::fixed()
-## x dplyr::lag()      masks stats::lag()
-## x yardstick::spec() masks readr::spec()
-## x recipes::step()   masks stats::step()
-## • Learn how to get started at https://www.tidymodels.org/start/</code></pre>
-<pre class="r"><code>library(ggplot2)
+<pre class="r"><code>library(tidymodels)
+library(ggplot2)
 library(dplyr)</code></pre>
 <p>Let’s load the data. You can get it from here: <a href="https://www.kaggle.com/datasets/rodolfomendes/abalone-dataset">Abalone Data Set</a></p>
 <pre class="r"><code>abalone &lt;- read.csv(&quot;~/Downloads/abalone.csv&quot;)
@@ -346,7 +333,6 @@ head(abalone)</code></pre>
 lm.fit</code></pre>
 <pre><code>## parsnip model object
 ## 
-## Fit time:  6ms 
 ## 
 ## Call:
 ## stats::lm(formula = Rings ~ Diameter, data = data)

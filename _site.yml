@@ -11,6 +11,8 @@ navbar:
         href: blog.html
       - text: "Tidy Model Tutorial"
         href: tidymodel.html
+      - text: "Classification"
+        href: classification.html
   right:
     - text: "Github"
       icon: fa-github
