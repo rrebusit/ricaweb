@@ -196,3 +196,8 @@ Accuracy is about 88%
 
 # Conclusion
 It looks like a logisitic regression or LDA makes better predictions in stroke as their accuracy are within 93-95%
+
+# About
+Hi there, my name is Rica Rebusit and I am an Applied Mathematics major at California State University, Chico also in the Data Science program. I am interested in machine learning in the healthcare or sports fields.
+
+Here are my links to my [Website](https://data485-s22.github.io/website-basic-rrebusit/), [Handshake](https://csuchico.joinhandshake.com/stu/users/16836139), [GitHub](https://github.com/rrebusit)
