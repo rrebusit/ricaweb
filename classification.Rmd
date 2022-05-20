@@ -129,7 +129,7 @@ It looks like the model accurately predicted 95% of the time, however this is st
 # About
 Hi there, my name is Rica Rebusit and I am an Applied Mathematics major at California State University, Chico also in the Data Science program. I am interested in working in the healthcare or sports fields, but I am open to other fields.
 
-Here are my links to my [Website](https://data485-s22.github.io/website-basic-rrebusit/), [Handshake](https://csuchico.joinhandshake.com/stu/users/16836139), [GitHub](https://github.com/rrebusit)
+Here are my links to my [Website](https://data485-s22.github.io/website-basic-rrebusit/), [Handshake](https://csuchico.joinhandshake.com/stu/users/16836139), [GitHub](https://github.com/rrebusit), and click this link if you want to send me an e-mail [rebusitrica\@gmail.com](mailto:rebusitrica@gmail.com){.email}
 
 ```{r}
 sessionInfo()
