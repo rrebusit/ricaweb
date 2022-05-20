@@ -12,7 +12,7 @@
 <meta name="author" content="Rica Rebusit" />
 
 
-<title>Classification</title>
+<title>Stroke Prediction</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -265,7 +265,7 @@ $(document).ready(function () {
       <a href="tidymodel.html">Tidy Model Tutorial</a>
     </li>
     <li>
-      <a href="classification.html">Classification</a>
+      <a href="classification.html">Stroke Classification</a>
     </li>
   </ul>
 </li>
@@ -287,7 +287,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Classification</h1>
+<h1 class="title toc-ignore">Stroke Prediction</h1>
 <h4 class="author">Rica Rebusit</h4>
 <h4 class="date">5/11/2022</h4>
 
@@ -296,27 +296,31 @@ $(document).ready(function () {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>In this blog post, I will be using classification models in the tidy models framework. I will be predicting stroke using this data set from kaggle: <a href="https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset">Click Me</a></p>
+<p>Stroke is one of the world’s leading causes in death. In order to protect the well-being of an individual, it is important to be able to accurately predict the likelihood of someone having a stroke based on their conditions to take action early and avoid long term damage. In this blog post, I will be documenting my process in using logistic regression in the tidy models framework to predict stroke using this raw data set from kaggle: <a href="https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset">Click Me</a></p>
 </div>
 <div id="variables" class="section level2">
 <h2>Variables</h2>
-<p>id: The patient’s identity number</p>
-<p>gender: The gender the patient identifies as. ‘Male’, ‘Female’, or ‘Other’</p>
-<p>age: Age of the patient in years</p>
-<p>hypertension: If patient has hypertension or high blood pressure. 0 for no and 1 for yes</p>
-<p>heart_disease: If patient has heart disease. 0 for no and 1 for yes</p>
-<p>ever_married: If the patient has been married. Yes for yes and no for no</p>
-<p>work_type: The type of employment the patient is in. ‘Private’, ‘Self-employed’, ‘Government job’, ‘Never_worked’, or people who do not have a job which is ‘chilren’</p>
-<p>Residence_type: The type of area where the patient lives. ‘Urban’ or ‘Rural’</p>
-<p>average_glucose_level: Average glucose level of the patient. Measures the level of sugar in a patient’s blood and tests for diabetes. The normal average glucose varies by age.</p>
-<p>bmi: Body Mass Index of patient</p>
-<p>smoking_status: If the patient smokes, never smokes, smoked before, or unknown</p>
-<p>stroke: If the patient had a stroke. 0 for no and 1 for yes</p>
+<p>This data set has 5110 rows of 12 variables</p>
+<p><em>id</em>: The patient’s identity number</p>
+<p><em>gender</em>: The gender the patient identifies as. ‘Male’, ‘Female’, or ‘Other’</p>
+<p><em>age</em>: Age of the patient in years</p>
+<p><em>hypertension</em>: If patient has hypertension or high blood pressure. 0 for no and 1 for yes</p>
+<p><em>heart_disease</em>: If patient has heart disease. 0 for no and 1 for yes</p>
+<p><em>ever_married</em>: If the patient has been married. Yes for yes and no for no</p>
+<p><em>work_type</em>: The type of employment the patient is in. ‘Private’, ‘Self-employed’, ‘Government job’, ‘Never_worked’, or people who do not have a job which is ‘children’</p>
+<p><em>Residence_type</em>: The type of area where the patient lives. ‘Urban’ or ‘Rural’</p>
+<p><em>average_glucose_level</em>: Average glucose level of the patient. Measures the level of sugar in a patient’s blood and tests for diabetes. The normal average glucose varies by age.</p>
+<p><em>bmi</em>: Body Mass Index of patient</p>
+<p><em>smoking_status</em>: If the patient smokes, never smokes, smoked before, or unknown</p>
+<p><em>stroke</em>: If the patient had a stroke. 0 for no and 1 for yes</p>
 </div>
 <div id="cleaning-up" class="section level2">
 <h2>Cleaning Up</h2>
-<pre class="r"><code>stroke &lt;- read.csv(&quot;~/Downloads/healthcare-dataset-stroke-data.csv&quot;)
-summary(stroke)</code></pre>
+<p>First we will need to clean the data set if needed so that the data is not messy</p>
+<p>Let’s load in the data set</p>
+<pre class="r"><code>stroke &lt;- read.csv(&quot;~/Downloads/healthcare-dataset-stroke-data.csv&quot;)</code></pre>
+<p>Now we will check the summary statistics</p>
+<pre class="r"><code>summary(stroke)</code></pre>
 <pre><code>##        id           gender               age         hypertension    
 ##  Min.   :   67   Length:5110        Min.   : 0.08   Min.   :0.00000  
 ##  1st Qu.:17741   Class :character   1st Qu.:25.00   1st Qu.:0.00000  
@@ -338,6 +342,7 @@ summary(stroke)</code></pre>
 ##  Mean   :106.15                                          Mean   :0.04873  
 ##  3rd Qu.:114.09                                          3rd Qu.:0.00000  
 ##  Max.   :271.74                                          Max.   :1.00000</code></pre>
+<p>The data needs a little cleaning so let’s check out the type the variables are</p>
 <pre class="r"><code>str(stroke)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    5110 obs. of  12 variables:
 ##  $ id               : int  9046 51676 31112 60182 1665 56669 53882 10434 27419 60491 ...
@@ -352,21 +357,7 @@ summary(stroke)</code></pre>
 ##  $ bmi              : chr  &quot;36.6&quot; &quot;N/A&quot; &quot;32.5&quot; &quot;34.4&quot; ...
 ##  $ smoking_status   : chr  &quot;formerly smoked&quot; &quot;never smoked&quot; &quot;never smoked&quot; &quot;smokes&quot; ...
 ##  $ stroke           : int  1 1 1 1 1 1 1 1 1 1 ...</code></pre>
-<pre class="r"><code>head(stroke)</code></pre>
-<pre><code>##      id gender age hypertension heart_disease ever_married     work_type
-## 1  9046   Male  67            0             1          Yes       Private
-## 2 51676 Female  61            0             0          Yes Self-employed
-## 3 31112   Male  80            0             1          Yes       Private
-## 4 60182 Female  49            0             0          Yes       Private
-## 5  1665 Female  79            1             0          Yes Self-employed
-## 6 56669   Male  81            0             0          Yes       Private
-##   Residence_type avg_glucose_level  bmi  smoking_status stroke
-## 1          Urban            228.69 36.6 formerly smoked      1
-## 2          Rural            202.21  N/A    never smoked      1
-## 3          Rural            105.92 32.5    never smoked      1
-## 4          Urban            171.23 34.4          smokes      1
-## 5          Rural            174.12   24    never smoked      1
-## 6          Urban            186.21   29 formerly smoked      1</code></pre>
+<p>The data has variables that are characters or or integers that need to be converted into factors that way we can fit the logistic regression</p>
 <pre class="r"><code>stroke$stroke &lt;- as.factor(stroke$stroke)
 stroke$gender &lt;- as.factor(stroke$gender)
 stroke$hypertension &lt;- as.factor(stroke$hypertension)
@@ -375,56 +366,49 @@ stroke$ever_married &lt;- as.factor(stroke$ever_married)
 stroke$work_type &lt;- as.factor(stroke$work_type)
 stroke$Residence_type &lt;- as.factor(stroke$Residence_type)
 stroke$smoking_status &lt;- as.factor(stroke$smoking_status)
-str(stroke)</code></pre>
-<pre><code>## &#39;data.frame&#39;:    5110 obs. of  12 variables:
-##  $ id               : int  9046 51676 31112 60182 1665 56669 53882 10434 27419 60491 ...
-##  $ gender           : Factor w/ 3 levels &quot;Female&quot;,&quot;Male&quot;,..: 2 1 2 1 1 2 2 1 1 1 ...
-##  $ age              : num  67 61 80 49 79 81 74 69 59 78 ...
-##  $ hypertension     : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 2 1 2 1 1 1 ...
-##  $ heart_disease    : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 1 2 1 1 1 2 1 1 1 ...
-##  $ ever_married     : Factor w/ 2 levels &quot;No&quot;,&quot;Yes&quot;: 2 2 2 2 2 2 2 1 2 2 ...
-##  $ work_type        : Factor w/ 5 levels &quot;children&quot;,&quot;Govt_job&quot;,..: 4 5 4 4 5 4 4 4 4 4 ...
-##  $ Residence_type   : Factor w/ 2 levels &quot;Rural&quot;,&quot;Urban&quot;: 2 1 1 2 1 2 1 2 1 2 ...
-##  $ avg_glucose_level: num  229 202 106 171 174 ...
-##  $ bmi              : chr  &quot;36.6&quot; &quot;N/A&quot; &quot;32.5&quot; &quot;34.4&quot; ...
-##  $ smoking_status   : Factor w/ 4 levels &quot;formerly smoked&quot;,..: 1 2 2 3 2 1 2 2 4 4 ...
-##  $ stroke           : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 2 2 2 2 2 2 2 2 2 ...</code></pre>
-<pre class="r"><code>str(stroke$bmi)</code></pre>
-<pre><code>##  chr [1:5110] &quot;36.6&quot; &quot;N/A&quot; &quot;32.5&quot; &quot;34.4&quot; &quot;24&quot; &quot;29&quot; &quot;27.4&quot; &quot;22.8&quot; &quot;N/A&quot; ...</code></pre>
-<pre class="r"><code>stroke$bmi &lt;- as.numeric(stroke$bmi)</code></pre>
-<pre><code>## Warning: NAs introduced by coercion</code></pre>
-<pre class="r"><code>stroke$bmi[is.na(stroke$bmi)] &lt;- mean(stroke$bmi,na.rm=TRUE)</code></pre>
-<pre class="r"><code>stroke &lt;- select(stroke, -c(&quot;id&quot;))
-head(stroke)</code></pre>
-<pre><code>##   gender age hypertension heart_disease ever_married     work_type
-## 1   Male  67            0             1          Yes       Private
-## 2 Female  61            0             0          Yes Self-employed
-## 3   Male  80            0             1          Yes       Private
-## 4 Female  49            0             0          Yes       Private
-## 5 Female  79            1             0          Yes Self-employed
-## 6   Male  81            0             0          Yes       Private
-##   Residence_type avg_glucose_level      bmi  smoking_status stroke
-## 1          Urban            228.69 36.60000 formerly smoked      1
-## 2          Rural            202.21 28.89324    never smoked      1
-## 3          Rural            105.92 32.50000    never smoked      1
-## 4          Urban            171.23 34.40000          smokes      1
-## 5          Rural            174.12 24.00000    never smoked      1
-## 6          Urban            186.21 29.00000 formerly smoked      1</code></pre>
+stroke$bmi &lt;- as.numeric(stroke$bmi)</code></pre>
+<p>Let’s look at the data again now</p>
+<pre class="r"><code>summary(stroke)</code></pre>
+<pre><code>##        id           gender          age        hypertension heart_disease
+##  Min.   :   67   Female:2994   Min.   : 0.08   0:4612       0:4834       
+##  1st Qu.:17741   Male  :2115   1st Qu.:25.00   1: 498       1: 276       
+##  Median :36932   Other :   1   Median :45.00                             
+##  Mean   :36518                 Mean   :43.23                             
+##  3rd Qu.:54682                 3rd Qu.:61.00                             
+##  Max.   :72940                 Max.   :82.00                             
+##                                                                          
+##  ever_married         work_type    Residence_type avg_glucose_level
+##  No :1757     children     : 687   Rural:2514     Min.   : 55.12   
+##  Yes:3353     Govt_job     : 657   Urban:2596     1st Qu.: 77.25   
+##               Never_worked :  22                  Median : 91.89   
+##               Private      :2925                  Mean   :106.15   
+##               Self-employed: 819                  3rd Qu.:114.09   
+##                                                   Max.   :271.74   
+##                                                                    
+##       bmi                smoking_status stroke  
+##  Min.   :10.30   formerly smoked: 885   0:4861  
+##  1st Qu.:23.50   never smoked   :1892   1: 249  
+##  Median :28.10   smokes         : 789           
+##  Mean   :28.89   Unknown        :1544           
+##  3rd Qu.:33.10                                  
+##  Max.   :97.60                                  
+##  NA&#39;s   :201</code></pre>
+<p>I’ll just remove the <em>id</em> column because it’s not really needed</p>
+<pre class="r"><code>stroke &lt;- select(stroke, -c(&quot;id&quot;))</code></pre>
 </div>
 <div id="quick-exploratory-data-analysis" class="section level2">
 <h2>Quick Exploratory Data Analysis</h2>
+<p>Let’s look at some quick initial graphs to visualize the data</p>
 <pre class="r"><code>ggplot(stroke, aes(stroke, fill=stroke)) + geom_bar()</code></pre>
-<p><img src="classification_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="classification_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>Seems like an imbalance in data. More people have not had a stroke than people who do</p>
 <pre class="r"><code>ggplot(stroke, aes(age, avg_glucose_level, color = stroke)) + geom_point(alpha = 0.4) + facet_wrap(~stroke)</code></pre>
-<p><img src="classification_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="classification_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>People who have had strokes are mostly elderly</p>
-<pre class="r"><code>ggplot(stroke, aes(bmi, fill=stroke)) + geom_histogram() </code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="classification_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
 <div id="classification---logistic-regression" class="section level1">
 <h1>Classification - Logistic Regression</h1>
+<p>Now that we cleaned and did some exploration on our data, we can fit a model. Although more cleaning need to be done before we can have a better model such as imputing the NA values in bmi which would enable us to retain more of the data and do some resampling because the amount of people recorded having no stroke is much greater than people that do. However for this blog post, we will just keep it raw and see how the model performs.</p>
 <pre class="r"><code>par.spec &lt;- logistic_reg() %&gt;%
   set_mode(&quot;classification&quot;) %&gt;%
   set_engine(&quot;glm&quot;)
@@ -434,200 +418,111 @@ tidy(lm.fit)</code></pre>
 <pre><code>## # A tibble: 11 × 5
 ##    term                       estimate std.error statistic  p.value
 ##    &lt;chr&gt;                         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-##  1 (Intercept)                -7.52      0.540    -13.9    4.57e-44
-##  2 age                         0.0697    0.00531   13.1    2.15e-39
-##  3 genderMale                  0.0154    0.141      0.109  9.13e- 1
-##  4 genderOther                -7.48    325.        -0.0230 9.82e- 1
-##  5 hypertension1               0.394     0.164      2.40   1.64e- 2
-##  6 heart_disease1              0.299     0.190      1.57   1.16e- 1
-##  7 avg_glucose_level           0.00409   0.00119    3.43   6.09e- 4
-##  8 bmi                         0.00163   0.0111     0.146  8.84e- 1
-##  9 smoking_statusnever smoked -0.202     0.175     -1.16   2.48e- 1
-## 10 smoking_statussmokes        0.113     0.214      0.530  5.96e- 1
-## 11 smoking_statusUnknown      -0.0411    0.206     -0.199  8.42e- 1</code></pre>
-<pre class="r"><code>ml &lt;- initial_split(stroke, prop=.75, strata=stroke)
-train &lt;- ml %&gt;%
-  training()
-test &lt;- ml %&gt;%
-  testing()
-prediction &lt;- predict(lm.fit, new_data=test, type=&quot;class&quot;)
-probability &lt;- predict(lm.fit, new_data=test, type=&quot;prob&quot;)
-test.train &lt;- test %&gt;%
-  select(stroke) %&gt;%
-  bind_cols(prediction,probability)
-test.train[1:5, ]</code></pre>
-<pre><code>##   stroke .pred_class   .pred_0    .pred_1
-## 1      1           0 0.9308617 0.06913830
-## 2      1           0 0.9622415 0.03775852
-## 3      1           0 0.8216716 0.17832837
-## 4      1           0 0.9236410 0.07635905
-## 5      1           0 0.9229082 0.07709178</code></pre>
-<pre class="r"><code>conf_mat(test.train, truth= stroke, estimate= .pred_class)</code></pre>
-<pre><code>##           Truth
-## Prediction    0    1
-##          0 1214   64
-##          1    0    0</code></pre>
-<pre class="r"><code>accuracy(test.train, truth= stroke, estimate= .pred_class)</code></pre>
-<pre><code>## # A tibble: 1 × 3
-##   .metric  .estimator .estimate
-##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-## 1 accuracy binary         0.950</code></pre>
-<p>Accuracy is about 95%</p>
-</div>
-<div id="classification---linear-discriminant-analysis-lda" class="section level1">
-<h1>Classification - Linear Discriminant Analysis (LDA)</h1>
-<p>Make sure to load in <strong>library(discrim)</strong></p>
-<pre class="r"><code>lda &lt;- discrim_linear() %&gt;%
-  set_mode(&quot;classification&quot;) %&gt;%
-  set_engine(&quot;MASS&quot;)
-lda.fit &lt;- lda %&gt;%
-  fit(stroke ~ age + gender + hypertension + heart_disease + avg_glucose_level + bmi + smoking_status, data=stroke)
-lda.fit</code></pre>
-<pre><code>## parsnip model object
+##  1 (Intercept)                -7.82      0.588    -13.3    2.44e-40
+##  2 age                         0.0690    0.00585   11.8    3.56e-32
+##  3 genderMale                 -0.0112    0.154     -0.0727 9.42e- 1
+##  4 genderOther                -7.29    325.        -0.0224 9.82e- 1
+##  5 hypertension1               0.518     0.174      2.97   3.00e- 3
+##  6 heart_disease1              0.373     0.206      1.81   7.04e- 2
+##  7 avg_glucose_level           0.00470   0.00129    3.64   2.69e- 4
+##  8 bmi                         0.00346   0.0117     0.294  7.68e- 1
+##  9 smoking_statusnever smoked -0.0578    0.188     -0.307  7.59e- 1
+## 10 smoking_statussmokes        0.321     0.229      1.41   1.60e- 1
+## 11 smoking_statusUnknown      -0.257     0.245     -1.05   2.95e- 1</code></pre>
+<p>Now that we have fitted our model, let’s see how well it performs</p>
+<pre class="r"><code>pred &lt;- predict(lm.fit, stroke)
+confusionMatrix(stroke$stroke, pred$.pred_class, positive = &quot;1&quot;)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
 ## 
-## Call:
-## lda(stroke ~ age + gender + hypertension + heart_disease + avg_glucose_level + 
-##     bmi + smoking_status, data = data)
-## 
-## Prior probabilities of groups:
-##          0          1 
-## 0.95127202 0.04872798 
-## 
-## Group means:
-##        age genderMale genderOther hypertension1 heart_disease1
-## 0 41.97154  0.4128780 0.000205719     0.0888706     0.04710965
-## 1 67.72819  0.4337349 0.000000000     0.2650602     0.18875502
-##   avg_glucose_level      bmi smoking_statusnever smoked smoking_statussmokes
-## 0          104.7955 28.82539                  0.3707056            0.1536721
-## 1          132.5447 30.21779                  0.3614458            0.1686747
-##   smoking_statusUnknown
-## 0             0.3079613
-## 1             0.1887550
-## 
-## Coefficients of linear discriminants:
-##                                     LD1
-## age                         0.037010927
-## genderMale                  0.002361466
-## genderOther                -0.487323572
-## hypertension1               0.759676871
-## heart_disease1              1.022724281
-## avg_glucose_level           0.005746359
-## bmi                        -0.023781349
-## smoking_statusnever smoked -0.182754282
-## smoking_statussmokes       -0.116287646
-## smoking_statusUnknown       0.160561765</code></pre>
-<pre class="r"><code>ml2 &lt;- initial_split(stroke, prop=.75, strata=stroke)
-train2 &lt;- ml2 %&gt;%
-  training()
-test2 &lt;- ml2 %&gt;%
-  testing()
-prediction2 &lt;- predict(lda.fit, new_data=test2, type=&quot;class&quot;)
-probability2 &lt;- predict(lda.fit, new_data=test2, type=&quot;prob&quot;)
-test.train2 &lt;- test2 %&gt;%
-  select(stroke) %&gt;%
-  bind_cols(prediction2,probability2)
-test.train[1:5, ]</code></pre>
-<pre><code>##   stroke .pred_class   .pred_0    .pred_1
-## 1      1           0 0.9308617 0.06913830
-## 2      1           0 0.9622415 0.03775852
-## 3      1           0 0.8216716 0.17832837
-## 4      1           0 0.9236410 0.07635905
-## 5      1           0 0.9229082 0.07709178</code></pre>
-<pre class="r"><code>conf_mat(test.train2, truth= stroke, estimate= .pred_class)</code></pre>
-<pre><code>##           Truth
+##           Reference
 ## Prediction    0    1
-##          0 1208   58
-##          1    7    5</code></pre>
-<pre class="r"><code>accuracy(test.train2, truth= stroke, estimate= .pred_class)</code></pre>
-<pre><code>## # A tibble: 1 × 3
-##   .metric  .estimator .estimate
-##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-## 1 accuracy binary         0.949</code></pre>
-<p>Accuracy is about 93-95%</p>
-</div>
-<div id="classification---quadratic-discriminant-analysis-qda" class="section level1">
-<h1>Classification - Quadratic Discriminant Analysis (QDA)</h1>
-<pre class="r"><code>qda &lt;- discrim_quad() %&gt;%
-  set_mode(&quot;classification&quot;) %&gt;%
-  set_engine(&quot;MASS&quot;)
-qda.fit &lt;- qda %&gt;%
-  fit(stroke ~ age + heart_disease + avg_glucose_level + bmi + hypertension + smoking_status, data=stroke)
-
-ml3 &lt;- initial_split(stroke, prop=.75, strata=stroke)
-train3 &lt;- ml3 %&gt;%
-  training()
-test3 &lt;- ml3 %&gt;%
-  testing()
-prediction3 &lt;- predict(qda.fit, new_data=test3, type=&quot;class&quot;)
-probability3 &lt;- predict(qda.fit, new_data=test3, type=&quot;prob&quot;)
-test.train3 &lt;- test3 %&gt;%
-  select(stroke) %&gt;%
-  bind_cols(prediction3,probability3)
-test.train[1:5, ]</code></pre>
-<pre><code>##   stroke .pred_class   .pred_0    .pred_1
-## 1      1           0 0.9308617 0.06913830
-## 2      1           0 0.9622415 0.03775852
-## 3      1           0 0.8216716 0.17832837
-## 4      1           0 0.9236410 0.07635905
-## 5      1           0 0.9229082 0.07709178</code></pre>
-<pre class="r"><code>conf_mat(test.train3, truth= stroke, estimate= .pred_class)</code></pre>
-<pre><code>##           Truth
-## Prediction    0    1
-##          0 1092   45
-##          1  109   32</code></pre>
-<pre class="r"><code>accuracy(test.train3, truth= stroke, estimate= .pred_class)</code></pre>
-<pre><code>## # A tibble: 1 × 3
-##   .metric  .estimator .estimate
-##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-## 1 accuracy binary         0.879</code></pre>
-<p>Accuracy is lowered and is now about 87-89%</p>
-</div>
-<div id="classification---k-nearest-neighbors" class="section level1">
-<h1>Classification - K Nearest Neighbors</h1>
-<p>Make sure to load in <strong>library(kknn)</strong></p>
-<pre class="r"><code>knn &lt;- nearest_neighbor(neighbors=1) %&gt;%
-  set_mode(&quot;classification&quot;) %&gt;%
-  set_engine(&quot;kknn&quot;) 
-knn.fit &lt;- knn %&gt;%
-  fit(stroke ~ age + gender + hypertension + heart_disease + avg_glucose_level + bmi + smoking_status, data=stroke)
-
-ml4 &lt;- initial_split(stroke, prop=.75, strata=stroke)
-train4 &lt;- ml4 %&gt;%
-  training()
-test4 &lt;- ml4 %&gt;%
-  testing()
-prediction4 &lt;- predict(qda.fit, new_data=test4, type=&quot;class&quot;)
-probability4 &lt;- predict(qda.fit, new_data=test4, type=&quot;prob&quot;)
-test.train4 &lt;- test4 %&gt;%
-  select(stroke) %&gt;%
-  bind_cols(prediction4,probability4)
-test.train[1:5, ]</code></pre>
-<pre><code>##   stroke .pred_class   .pred_0    .pred_1
-## 1      1           0 0.9308617 0.06913830
-## 2      1           0 0.9622415 0.03775852
-## 3      1           0 0.8216716 0.17832837
-## 4      1           0 0.9236410 0.07635905
-## 5      1           0 0.9229082 0.07709178</code></pre>
-<pre class="r"><code>conf_mat(test.train4, truth= stroke, estimate= .pred_class)</code></pre>
-<pre><code>##           Truth
-## Prediction    0    1
-##          0 1117   41
-##          1  102   18</code></pre>
-<pre class="r"><code>accuracy(test.train4, truth= stroke, estimate= .pred_class)</code></pre>
-<pre><code>## # A tibble: 1 × 3
-##   .metric  .estimator .estimate
-##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-## 1 accuracy binary         0.888</code></pre>
-<p>Accuracy is about 88%</p>
+##          0 4700    0
+##          1  208    1
+##                                           
+##                Accuracy : 0.9576          
+##                  95% CI : (0.9516, 0.9631)
+##     No Information Rate : 0.9998          
+##     P-Value [Acc &gt; NIR] : 1               
+##                                           
+##                   Kappa : 0.0091          
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt;2e-16          
+##                                           
+##             Sensitivity : 1.0000000       
+##             Specificity : 0.9576202       
+##          Pos Pred Value : 0.0047847       
+##          Neg Pred Value : 1.0000000       
+##              Prevalence : 0.0002037       
+##          Detection Rate : 0.0002037       
+##    Detection Prevalence : 0.0425749       
+##       Balanced Accuracy : 0.9788101       
+##                                           
+##        &#39;Positive&#39; Class : 1               
+## </code></pre>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>It looks like a logisitic regression or LDA makes better predictions in stroke as their accuracy are within 93-95%</p>
+<p>It looks like the model accurately predicted 95% of the time, however this is still not a good model. A lot of techniques should be done in order to have a better model. Like mentioned previously, we would need to do some resampling. We would also have to do imputations for the missing values. We should also use machine learning to train and test the data because it would be ideal to use a model to predict future data points as well as to account for overfitting</p>
 </div>
 <div id="about" class="section level1">
 <h1>About</h1>
-<p>Hi there, my name is Rica Rebusit and I am an Applied Mathematics major at California State University, Chico also in the Data Science program. I am interested in machine learning in the healthcare or sports fields.</p>
+<p>Hi there, my name is Rica Rebusit and I am an Applied Mathematics major at California State University, Chico also in the Data Science program. I am interested in working in the healthcare or sports fields, but I am open to other fields.</p>
 <p>Here are my links to my <a href="https://data485-s22.github.io/website-basic-rrebusit/">Website</a>, <a href="https://csuchico.joinhandshake.com/stu/users/16836139">Handshake</a>, <a href="https://github.com/rrebusit">GitHub</a></p>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 4.1.1 (2021-08-10)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Catalina 10.15.4
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] caret_6.0-91       lattice_0.20-45    yardstick_0.0.9    workflowsets_0.2.1
+##  [5] workflows_0.2.6    tune_0.2.0         rsample_0.1.1      recipes_0.2.0     
+##  [9] parsnip_0.2.1      modeldata_0.1.1    infer_1.0.0        dials_0.1.0       
+## [13] scales_1.1.1       broom_0.7.12       tidymodels_0.2.0   forcats_0.5.1     
+## [17] stringr_1.4.0      dplyr_1.0.8        purrr_0.3.4        readr_2.1.2       
+## [21] tidyr_1.2.0        tibble_3.1.6       ggplot2_3.3.5      tidyverse_1.3.1   
+## 
+## loaded via a namespace (and not attached):
+##  [1] colorspace_2.0-3     ellipsis_0.3.2       class_7.3-20        
+##  [4] fs_1.5.2             proxy_0.4-26         rstudioapi_0.13     
+##  [7] farver_2.1.0         listenv_0.8.0        furrr_0.2.3         
+## [10] prodlim_2019.11.13   fansi_1.0.3          lubridate_1.8.0     
+## [13] xml2_1.3.3           codetools_0.2-18     splines_4.1.1       
+## [16] knitr_1.38           jsonlite_1.8.0       pROC_1.18.0         
+## [19] dbplyr_2.1.1         compiler_4.1.1       httr_1.4.2          
+## [22] backports_1.4.1      assertthat_0.2.1     Matrix_1.4-1        
+## [25] fastmap_1.1.0        cli_3.2.0            htmltools_0.5.2     
+## [28] tools_4.1.1          gtable_0.3.0         glue_1.6.2          
+## [31] reshape2_1.4.4       Rcpp_1.0.8.3         cellranger_1.1.0    
+## [34] jquerylib_0.1.4      DiceDesign_1.9       vctrs_0.3.8         
+## [37] nlme_3.1-157         iterators_1.0.14     timeDate_3043.102   
+## [40] gower_1.0.0          xfun_0.30            globals_0.14.0      
+## [43] rvest_1.0.2          lifecycle_1.0.1      future_1.24.0       
+## [46] MASS_7.3-56          ipred_0.9-12         hms_1.1.1           
+## [49] parallel_4.1.1       yaml_2.3.5           sass_0.4.1          
+## [52] rpart_4.1.16         stringi_1.7.6        highr_0.9           
+## [55] foreach_1.5.2        e1071_1.7-9          lhs_1.1.5           
+## [58] hardhat_0.2.0        lava_1.6.10          rlang_1.0.2         
+## [61] pkgconfig_2.0.3      evaluate_0.15        labeling_0.4.2      
+## [64] tidyselect_1.1.2     parallelly_1.30.0    plyr_1.8.7          
+## [67] magrittr_2.0.2       R6_2.5.1             generics_0.1.2      
+## [70] DBI_1.1.2            pillar_1.7.0         haven_2.4.3         
+## [73] withr_2.5.0          survival_3.3-1       nnet_7.3-17         
+## [76] future.apply_1.8.1   modelr_0.1.8         crayon_1.5.1        
+## [79] utf8_1.2.2           tzdb_0.3.0           rmarkdown_2.13      
+## [82] grid_4.1.1           readxl_1.3.1         data.table_1.14.2   
+## [85] ModelMetrics_1.2.2.2 reprex_2.0.1         digest_0.6.29       
+## [88] stats4_4.1.1         munsell_0.5.0        GPfit_1.0-8         
+## [91] bslib_0.3.1</code></pre>
 </div>
 
 

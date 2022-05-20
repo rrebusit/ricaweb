@@ -1,5 +1,5 @@
 ---
-title: "Classification"
+title: "Stroke Prediction"
 author: "Rica Rebusit"
 date: "5/11/2022"
 output: 
@@ -12,46 +12,61 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidymodels)
 library(ggplot2)
 library(dplyr)
-library(discrim)
-library(kknn)
+library(caret)
+set.seed(1234)
 ```
 ## Introduction
-In this blog post, I will be using classification models in the tidy models framework. I will be predicting stroke using this data set from kaggle: [Click Me](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset)
+Stroke is one of the world's leading causes in death. In order to protect the well-being of an individual, it is important to be able to accurately predict the likelihood of someone having a stroke based on their conditions to take action early and avoid long term damage. In this blog post, I will be documenting my process in using logistic regression in the tidy models framework to predict stroke using this raw data set from kaggle: [Click Me](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset)
 
 ## Variables
-id: The patient's identity number
 
-gender: The gender the patient identifies as. 'Male', 'Female', or 'Other'
+This data set has 5110 rows of 12 variables
 
-age: Age of the patient in years
+*id*: The patient's identity number
 
-hypertension: If patient has hypertension or high blood pressure. 0 for no and 1 for yes
+*gender*: The gender the patient identifies as. 'Male', 'Female', or 'Other'
 
-heart_disease: If patient has heart disease. 0 for no and 1 for yes
+*age*: Age of the patient in years
 
-ever_married: If the patient has been married. Yes for yes and no for no
+*hypertension*: If patient has hypertension or high blood pressure. 0 for no and 1 for yes
 
-work_type: The type of employment the patient is in. 'Private', 'Self-employed', 'Government job', 'Never_worked', or people who do not have a job which is 'chilren'
+*heart_disease*: If patient has heart disease. 0 for no and 1 for yes
 
-Residence_type: The type of area where the patient lives. 'Urban' or 'Rural'
+*ever_married*: If the patient has been married. Yes for yes and no for no
 
-average_glucose_level: Average glucose level of the patient. Measures the level of sugar in a patient's blood and tests for diabetes. The normal average glucose varies by age.
+*work_type*: The type of employment the patient is in. 'Private', 'Self-employed', 'Government job', 'Never_worked', or people who do not have a job which is 'children'
 
-bmi: Body Mass Index of patient 
+*Residence_type*: The type of area where the patient lives. 'Urban' or 'Rural'
 
-smoking_status: If the patient smokes, never smokes, smoked before, or unknown
+*average_glucose_level*: Average glucose level of the patient. Measures the level of sugar in a patient's blood and tests for diabetes. The normal average glucose varies by age.
 
-stroke: If the patient had a stroke. 0 for no and 1 for yes
+*bmi*: Body Mass Index of patient 
+
+*smoking_status*: If the patient smokes, never smokes, smoked before, or unknown
+
+*stroke*: If the patient had a stroke. 0 for no and 1 for yes
 
 ## Cleaning Up
+
+First we will need to clean the data set if needed so that the data is not messy
+
+Let's load in the data set
 ```{r}
 stroke <- read.csv("~/Downloads/healthcare-dataset-stroke-data.csv")
-summary(stroke)
-str(stroke)
-head(stroke)
 ```
 
+Now we will check the summary statistics
 ```{r}
+summary(stroke)
+```
+
+The data needs a little cleaning so let's check out the type the variables are
+```{r}
+str(stroke)
+```
+
+The data has variables that are characters or or integers that need to be converted into factors that way we can fit the logistic regression
+```{r, warning = FALSE}
 stroke$stroke <- as.factor(stroke$stroke)
 stroke$gender <- as.factor(stroke$gender)
 stroke$hypertension <- as.factor(stroke$hypertension)
@@ -60,20 +75,22 @@ stroke$ever_married <- as.factor(stroke$ever_married)
 stroke$work_type <- as.factor(stroke$work_type)
 stroke$Residence_type <- as.factor(stroke$Residence_type)
 stroke$smoking_status <- as.factor(stroke$smoking_status)
-str(stroke)
-```
-
-```{r}
-str(stroke$bmi)
 stroke$bmi <- as.numeric(stroke$bmi)
-stroke$bmi[is.na(stroke$bmi)] <- mean(stroke$bmi,na.rm=TRUE)
 ```
 
+Let's look at the data again now 
+```{r}
+summary(stroke)
+```
+
+I'll just remove the *id* column because it's not really needed
 ```{r}
 stroke <- select(stroke, -c("id"))
-head(stroke)
 ```
+
 ## Quick Exploratory Data Analysis
+
+Let's look at some quick initial graphs to visualize the data
 ```{r}
 ggplot(stroke, aes(stroke, fill=stroke)) + geom_bar()
 ```
@@ -86,11 +103,10 @@ ggplot(stroke, aes(age, avg_glucose_level, color = stroke)) + geom_point(alpha =
 
 People who have had strokes are mostly elderly
 
-```{r}
-ggplot(stroke, aes(bmi, fill=stroke)) + geom_histogram() 
-``` 
-
 # Classification - Logistic Regression
+
+Now that we cleaned and did some exploration on our data, we can fit a model. Although more cleaning need to be done before we can have a better model such as imputing the NA values in bmi which would enable us to retain more of the data and do some resampling because the amount of people recorded having no stroke is much greater than people that do. However for this blog post, we will just keep it raw and see how the model performs.
+
 ```{r}
 par.spec <- logistic_reg() %>%
   set_mode("classification") %>%
@@ -98,106 +114,24 @@ par.spec <- logistic_reg() %>%
 lm.fit <- par.spec %>%
   fit(stroke ~ age + gender + hypertension + heart_disease + avg_glucose_level + bmi + smoking_status, data=stroke)
 tidy(lm.fit)
-
-ml <- initial_split(stroke, prop=.75, strata=stroke)
-train <- ml %>%
-  training()
-test <- ml %>%
-  testing()
-prediction <- predict(lm.fit, new_data=test, type="class")
-probability <- predict(lm.fit, new_data=test, type="prob")
-test.train <- test %>%
-  select(stroke) %>%
-  bind_cols(prediction,probability)
-test.train[1:5, ]
-conf_mat(test.train, truth= stroke, estimate= .pred_class)
-accuracy(test.train, truth= stroke, estimate= .pred_class)
 ```
 
-Accuracy is about 95%
+Now that we have fitted our model, let's see how well it performs 
 
-# Classification - Linear Discriminant Analysis (LDA)
-Make sure to load in **library(discrim)**
 ```{r}
-lda <- discrim_linear() %>%
-  set_mode("classification") %>%
-  set_engine("MASS")
-lda.fit <- lda %>%
-  fit(stroke ~ age + gender + hypertension + heart_disease + avg_glucose_level + bmi + smoking_status, data=stroke)
-lda.fit
-
-ml2 <- initial_split(stroke, prop=.75, strata=stroke)
-train2 <- ml2 %>%
-  training()
-test2 <- ml2 %>%
-  testing()
-prediction2 <- predict(lda.fit, new_data=test2, type="class")
-probability2 <- predict(lda.fit, new_data=test2, type="prob")
-test.train2 <- test2 %>%
-  select(stroke) %>%
-  bind_cols(prediction2,probability2)
-test.train[1:5, ]
-conf_mat(test.train2, truth= stroke, estimate= .pred_class)
-accuracy(test.train2, truth= stroke, estimate= .pred_class)
+pred <- predict(lm.fit, stroke)
+confusionMatrix(stroke$stroke, pred$.pred_class, positive = "1")
 ```
-
-Accuracy is about 93-95%
-
-# Classification - Quadratic Discriminant Analysis (QDA)
-```{r}
-qda <- discrim_quad() %>%
-  set_mode("classification") %>%
-  set_engine("MASS")
-qda.fit <- qda %>%
-  fit(stroke ~ age + heart_disease + avg_glucose_level + bmi + hypertension + smoking_status, data=stroke)
-
-ml3 <- initial_split(stroke, prop=.75, strata=stroke)
-train3 <- ml3 %>%
-  training()
-test3 <- ml3 %>%
-  testing()
-prediction3 <- predict(qda.fit, new_data=test3, type="class")
-probability3 <- predict(qda.fit, new_data=test3, type="prob")
-test.train3 <- test3 %>%
-  select(stroke) %>%
-  bind_cols(prediction3,probability3)
-test.train[1:5, ]
-conf_mat(test.train3, truth= stroke, estimate= .pred_class)
-accuracy(test.train3, truth= stroke, estimate= .pred_class)
-```
-
-Accuracy is lowered and is now about 87-89%
-
-# Classification - K Nearest Neighbors
-Make sure to load in **library(kknn)**
-```{r}
-knn <- nearest_neighbor(neighbors=1) %>%
-  set_mode("classification") %>%
-  set_engine("kknn") 
-knn.fit <- knn %>%
-  fit(stroke ~ age + gender + hypertension + heart_disease + avg_glucose_level + bmi + smoking_status, data=stroke)
-
-ml4 <- initial_split(stroke, prop=.75, strata=stroke)
-train4 <- ml4 %>%
-  training()
-test4 <- ml4 %>%
-  testing()
-prediction4 <- predict(qda.fit, new_data=test4, type="class")
-probability4 <- predict(qda.fit, new_data=test4, type="prob")
-test.train4 <- test4 %>%
-  select(stroke) %>%
-  bind_cols(prediction4,probability4)
-test.train[1:5, ]
-conf_mat(test.train4, truth= stroke, estimate= .pred_class)
-accuracy(test.train4, truth= stroke, estimate= .pred_class)
-```
-
-Accuracy is about 88%
 
 # Conclusion
-It looks like a logisitic regression or LDA makes better predictions in stroke as their accuracy are within 93-95%
+It looks like the model accurately predicted 95% of the time, however this is still not a good model. A lot of techniques should be done in order to have a better model. Like mentioned previously, we would need to do some resampling. We would also have to do imputations for the missing values. We should also use machine learning to train and test the data because it would be ideal to use a model to predict future data points as well as to account for overfitting
 
 # About
-Hi there, my name is Rica Rebusit and I am an Applied Mathematics major at California State University, Chico also in the Data Science program. I am interested in machine learning in the healthcare or sports fields.
+Hi there, my name is Rica Rebusit and I am an Applied Mathematics major at California State University, Chico also in the Data Science program. I am interested in working in the healthcare or sports fields, but I am open to other fields.
 
 Here are my links to my [Website](https://data485-s22.github.io/website-basic-rrebusit/), [Handshake](https://csuchico.joinhandshake.com/stu/users/16836139), [GitHub](https://github.com/rrebusit)
+
+```{r}
+sessionInfo()
+```
+
