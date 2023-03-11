@@ -1,0 +1,19 @@
+---
+title: "ANTH333 Media Presentation"
+author: "Rica Rebusit"
+date: "3/10/2022"
+output:
+  html_document:
+    theme: darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+test 
+```{r}
+sum <- 2+2
+sum
+```
+

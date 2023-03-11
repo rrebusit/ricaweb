@@ -13,6 +13,10 @@ navbar:
         href: tidymodel.html
       - text: "Stroke Classification"
         href: classification.html
+      - text: "ANTH333 Media test"
+        href: ANTH333Med.html
+      - text: "ANTH333 Code test"
+        href: ANTH333code.html
   right:
     - text: "Github"
       icon: fa-github

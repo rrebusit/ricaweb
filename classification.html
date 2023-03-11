@@ -267,6 +267,12 @@ $(document).ready(function () {
     <li>
       <a href="classification.html">Stroke Classification</a>
     </li>
+    <li>
+      <a href="ANTH333Med.html">ANTH333 Media test</a>
+    </li>
+    <li>
+      <a href="ANTH333code.html">ANTH333 Code test</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -296,27 +302,47 @@ $(document).ready(function () {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Stroke is one of the world’s leading causes in death. In order to protect the well-being of an individual, it is important to be able to accurately predict the likelihood of someone having a stroke based on their conditions to take action early and avoid long term damage. In this blog post, I will be documenting my process in using logistic regression in the tidy models framework to predict stroke using this raw data set from kaggle: <a href="https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset">Click Me</a></p>
+<p>Stroke is one of the world’s leading causes in death. In order to
+protect the well-being of an individual, it is important to be able to
+accurately predict the likelihood of someone having a stroke based on
+their conditions to take action early and avoid long term damage. In
+this blog post, I will be documenting my process in using logistic
+regression in the tidy models framework to predict stroke using this raw
+data set from kaggle: <a
+href="https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset">Click
+Me</a></p>
 </div>
 <div id="variables" class="section level2">
 <h2>Variables</h2>
 <p>This data set has 5110 rows of 12 variables</p>
 <p><em>id</em>: The patient’s identity number</p>
-<p><em>gender</em>: The gender the patient identifies as. ‘Male’, ‘Female’, or ‘Other’</p>
+<p><em>gender</em>: The gender the patient identifies as. ‘Male’,
+‘Female’, or ‘Other’</p>
 <p><em>age</em>: Age of the patient in years</p>
-<p><em>hypertension</em>: If patient has hypertension or high blood pressure. 0 for no and 1 for yes</p>
-<p><em>heart_disease</em>: If patient has heart disease. 0 for no and 1 for yes</p>
-<p><em>ever_married</em>: If the patient has been married. Yes for yes and no for no</p>
-<p><em>work_type</em>: The type of employment the patient is in. ‘Private’, ‘Self-employed’, ‘Government job’, ‘Never_worked’, or people who do not have a job which is ‘children’</p>
-<p><em>Residence_type</em>: The type of area where the patient lives. ‘Urban’ or ‘Rural’</p>
-<p><em>average_glucose_level</em>: Average glucose level of the patient. Measures the level of sugar in a patient’s blood and tests for diabetes. The normal average glucose varies by age.</p>
+<p><em>hypertension</em>: If patient has hypertension or high blood
+pressure. 0 for no and 1 for yes</p>
+<p><em>heart_disease</em>: If patient has heart disease. 0 for no and 1
+for yes</p>
+<p><em>ever_married</em>: If the patient has been married. Yes for yes
+and no for no</p>
+<p><em>work_type</em>: The type of employment the patient is in.
+‘Private’, ‘Self-employed’, ‘Government job’, ‘Never_worked’, or people
+who do not have a job which is ‘children’</p>
+<p><em>Residence_type</em>: The type of area where the patient lives.
+‘Urban’ or ‘Rural’</p>
+<p><em>average_glucose_level</em>: Average glucose level of the patient.
+Measures the level of sugar in a patient’s blood and tests for diabetes.
+The normal average glucose varies by age.</p>
 <p><em>bmi</em>: Body Mass Index of patient</p>
-<p><em>smoking_status</em>: If the patient smokes, never smokes, smoked before, or unknown</p>
-<p><em>stroke</em>: If the patient had a stroke. 0 for no and 1 for yes</p>
+<p><em>smoking_status</em>: If the patient smokes, never smokes, smoked
+before, or unknown</p>
+<p><em>stroke</em>: If the patient had a stroke. 0 for no and 1 for
+yes</p>
 </div>
 <div id="cleaning-up" class="section level2">
 <h2>Cleaning Up</h2>
-<p>First we will need to clean the data set if needed so that the data is not messy</p>
+<p>First we will need to clean the data set if needed so that the data
+is not messy</p>
 <p>Let’s load in the data set</p>
 <pre class="r"><code>stroke &lt;- read.csv(&quot;~/Downloads/healthcare-dataset-stroke-data.csv&quot;)</code></pre>
 <p>Now we will check the summary statistics</p>
@@ -342,7 +368,8 @@ $(document).ready(function () {
 ##  Mean   :106.15                                          Mean   :0.04873  
 ##  3rd Qu.:114.09                                          3rd Qu.:0.00000  
 ##  Max.   :271.74                                          Max.   :1.00000</code></pre>
-<p>The data needs a little cleaning so let’s check out the type the variables are</p>
+<p>The data needs a little cleaning so let’s check out the type the
+variables are</p>
 <pre class="r"><code>str(stroke)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    5110 obs. of  12 variables:
 ##  $ id               : int  9046 51676 31112 60182 1665 56669 53882 10434 27419 60491 ...
@@ -357,7 +384,9 @@ $(document).ready(function () {
 ##  $ bmi              : chr  &quot;36.6&quot; &quot;N/A&quot; &quot;32.5&quot; &quot;34.4&quot; ...
 ##  $ smoking_status   : chr  &quot;formerly smoked&quot; &quot;never smoked&quot; &quot;never smoked&quot; &quot;smokes&quot; ...
 ##  $ stroke           : int  1 1 1 1 1 1 1 1 1 1 ...</code></pre>
-<p>The data has variables that are characters or or integers that need to be converted into factors that way we can fit the logistic regression</p>
+<p>The data has variables that are characters or or integers that need
+to be converted into factors that way we can fit the logistic
+regression</p>
 <pre class="r"><code>stroke$stroke &lt;- as.factor(stroke$stroke)
 stroke$gender &lt;- as.factor(stroke$gender)
 stroke$hypertension &lt;- as.factor(stroke$hypertension)
@@ -393,7 +422,8 @@ stroke$bmi &lt;- as.numeric(stroke$bmi)</code></pre>
 ##  3rd Qu.:33.10                                  
 ##  Max.   :97.60                                  
 ##  NA&#39;s   :201</code></pre>
-<p>I’ll just remove the <em>id</em> column because it’s not really needed</p>
+<p>I’ll just remove the <em>id</em> column because it’s not really
+needed</p>
 <pre class="r"><code>stroke &lt;- select(stroke, -c(&quot;id&quot;))</code></pre>
 </div>
 <div id="quick-exploratory-data-analysis" class="section level2">
@@ -401,14 +431,21 @@ stroke$bmi &lt;- as.numeric(stroke$bmi)</code></pre>
 <p>Let’s look at some quick initial graphs to visualize the data</p>
 <pre class="r"><code>ggplot(stroke, aes(stroke, fill=stroke)) + geom_bar()</code></pre>
 <p><img src="classification_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>Seems like an imbalance in data. More people have not had a stroke than people who do</p>
+<p>Seems like an imbalance in data. More people have not had a stroke
+than people who do</p>
 <pre class="r"><code>ggplot(stroke, aes(age, avg_glucose_level, color = stroke)) + geom_point(alpha = 0.4) + facet_wrap(~stroke)</code></pre>
 <p><img src="classification_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>People who have had strokes are mostly elderly</p>
 </div>
 <div id="classification---logistic-regression" class="section level1">
 <h1>Classification - Logistic Regression</h1>
-<p>Now that we cleaned and did some exploration on our data, we can fit a model. Although more cleaning need to be done before we can have a better model such as imputing the NA values in bmi which would enable us to retain more of the data and do some resampling because the amount of people recorded having no stroke is much greater than people that do. However for this blog post, we will just keep it raw and see how the model performs.</p>
+<p>Now that we cleaned and did some exploration on our data, we can fit
+a model. Although more cleaning need to be done before we can have a
+better model such as imputing the NA values in bmi which would enable us
+to retain more of the data and do some resampling because the amount of
+people recorded having no stroke is much greater than people that do.
+However for this blog post, we will just keep it raw and see how the
+model performs.</p>
 <pre class="r"><code>par.spec &lt;- logistic_reg() %&gt;%
   set_mode(&quot;classification&quot;) %&gt;%
   set_engine(&quot;glm&quot;)
@@ -462,12 +499,27 @@ confusionMatrix(stroke$stroke, pred$.pred_class, positive = &quot;1&quot;)</code
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>It looks like the model accurately predicted 95% of the time, however this is still not a good model. A lot of techniques should be done in order to have a better model. Like mentioned previously, we would need to do some resampling. We would also have to do imputations for the missing values. We should also use machine learning to train and test the data because it would be ideal to use a model to predict future data points as well as to account for overfitting</p>
+<p>It looks like the model accurately predicted 95% of the time, however
+this is still not a good model. A lot of techniques should be done in
+order to have a better model. Like mentioned previously, we would need
+to do some resampling. We would also have to do imputations for the
+missing values. We should also use machine learning to train and test
+the data because it would be ideal to use a model to predict future data
+points as well as to account for overfitting</p>
 </div>
 <div id="about" class="section level1">
 <h1>About</h1>
-<p>Hi there, my name is Rica Rebusit and I am an Applied Mathematics major at California State University, Chico also in the Data Science program. I am interested in working in the healthcare or sports fields, but I am open to other fields.</p>
-<p>Here are my links to my <a href="https://data485-s22.github.io/website-basic-rrebusit/">Website</a>, <a href="https://csuchico.joinhandshake.com/stu/users/16836139">Handshake</a>, <a href="https://github.com/rrebusit">GitHub</a>, and click this link if you want to send me an e-mail <a href="mailto:rebusitrica@gmail.com" class="email">rebusitrica@gmail.com</a></p>
+<p>Hi there, my name is Rica Rebusit and I am an Applied Mathematics
+major at California State University, Chico also in the Data Science
+program. I am interested in working in the healthcare or sports fields,
+but I am open to other fields.</p>
+<p>Here are my links to my <a
+href="https://data485-s22.github.io/website-basic-rrebusit/">Website</a>,
+<a
+href="https://csuchico.joinhandshake.com/stu/users/16836139">Handshake</a>,
+<a href="https://github.com/rrebusit">GitHub</a>, and click this link if
+you want to send me an e-mail <a href="mailto:rebusitrica@gmail.com"
+class="email">rebusitrica@gmail.com</a></p>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 4.1.1 (2021-08-10)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)

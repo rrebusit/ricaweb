@@ -267,6 +267,12 @@ $(document).ready(function () {
     <li>
       <a href="classification.html">Stroke Classification</a>
     </li>
+    <li>
+      <a href="ANTH333Med.html">ANTH333 Media test</a>
+    </li>
+    <li>
+      <a href="ANTH333code.html">ANTH333 Code test</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -287,17 +293,26 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Blog #1 - Linear Algebra in Data Science</h1>
+<h1 class="title toc-ignore">Blog #1 - Linear Algebra in Data
+Science</h1>
 <h4 class="author">Rica Rebusit</h4>
 <h4 class="date">2/10/2022</h4>
 
 </div>
 
 
-<p>I enjoy math and I am not a very computer science-y person. A topic of math I enjoy a lot is linear algebra. My first experience with linear algebra was in my second semester here at Chico State. So I was pleasantly surprised that it had a useful role in data science. So now, I want to learn more about it and how to implement it since it is important in machine learning, which is a topic I am not very knowledgeable about.</p>
+<p>I enjoy math and I am not a very computer science-y person. A topic
+of math I enjoy a lot is linear algebra. My first experience with linear
+algebra was in my second semester here at Chico State. So I was
+pleasantly surprised that it had a useful role in data science. So now,
+I want to learn more about it and how to implement it since it is
+important in machine learning, which is a topic I am not very
+knowledgeable about.</p>
 <div id="some-basics-of-linear-algebra" class="section level2">
 <h2>Some Basics of Linear Algebra</h2>
-<p>Inverse: It is like the “reciprocal of a matrix” where when a square (nxn) matrix is multiplied by its inverse to result in the identity matrix</p>
+<p>Inverse: It is like the “reciprocal of a matrix” where when a square
+(nxn) matrix is multiplied by its inverse to result in the identity
+matrix</p>
 <pre class="r"><code>A &lt;- matrix(c(7,2,8,5), nrow=2, byrow=T) #Original Matrix
 A</code></pre>
 <pre><code>##      [,1] [,2]
@@ -312,7 +327,8 @@ A.inv</code></pre>
 <pre><code>##      [,1] [,2]
 ## [1,]    1    0
 ## [2,]    0    1</code></pre>
-<p>Transpose: Switching the rows and columns a nxm matrix to result in a mxn matrix</p>
+<p>Transpose: Switching the rows and columns a nxm matrix to result in a
+mxn matrix</p>
 <pre class="r"><code>A &lt;- matrix(c(2,7,9,11,0,5), nrow=2, ncol=3, byrow=T) #Original Matrix
 A</code></pre>
 <pre><code>##      [,1] [,2] [,3]
@@ -327,7 +343,9 @@ A.T</code></pre>
 </div>
 <div id="covariance-matrix" class="section level2">
 <h2>Covariance Matrix</h2>
-<p>A thing I learned now is the covariance matrix. It is an important matrix in machine learning and it shows us the correlation between variables</p>
+<p>A thing I learned now is the covariance matrix. It is an important
+matrix in machine learning and it shows us the correlation between
+variables</p>
 <pre class="r"><code>data(&quot;USArrests&quot;)
 head(USArrests)</code></pre>
 <pre><code>##            Murder Assault UrbanPop Rape
@@ -343,7 +361,8 @@ head(USArrests)</code></pre>
 ## Assault  291.062367 6945.1657 312.275102 519.26906
 ## UrbanPop   4.386204  312.2751 209.518776  55.76808
 ## Rape      22.991412  519.2691  55.768082  87.72916</code></pre>
-<p>In this example, the diagonals of the matrix represent the variance and the other values represent the covariance</p>
+<p>In this example, the diagonals of the matrix represent the variance
+and the other values represent the covariance</p>
 </div>
 
 
