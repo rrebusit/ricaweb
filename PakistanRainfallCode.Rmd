@@ -1,0 +1,207 @@
+---
+title: "Pakistan Rainfall Code"
+author: "Rica Rebusit"
+date: "3/20/2022"
+output:
+  html_document:
+    theme: darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Click here to go back to the ANTH333 media presentation: [Media Presentation](https://data485-s22.github.io/website-basic-rrebusit/ANTH333Med.html)
+
+# Load in Necessary Libraries
+
+```{r, warning = FALSE}
+library(tidyverse)
+```
+
+# Load in Data
+
+```{r}
+pakistan <- read.csv("~/Downloads/website-basic-rrebusit/Rainfall_1901_2016_PAK.csv")
+```
+
+The data is from kaggle and the link to it is right here -\> [Click Me](%22https://www.kaggle.com/datasets/zusmani/rainfall-in-pakistan%22)
+
+Information of Data:
+
+This data set has 3 variables:
+
+`Rainfall - (MM)` - This is the recorded rainfall for the year and month at the time. Rainfall is measured in millimeters
+
+`Year` - The year of each recorded rainfall. Contains 116 years of recorded rainfall.
+
+`Month` - The month of each recorded rainfall.
+
+# Exploratory Data Analysis
+
+```{r}
+str(pakistan)
+```
+
+```{r}
+summary(pakistan)
+```
+
+```{r}
+sum(is.na(pakistan))
+```
+
+```{r}
+head(pakistan)
+```
+
+Renaming `Rainfall - (MM)` to `Rainfall`
+
+```{r}
+pakistan <- rename(pakistan, Rainfall = 'Rainfall....MM.')
+head(pakistan)
+```
+
+Sum the amount of rainfall from all the years and find the percentage rainfall for the month
+
+```{r}
+sum_rainfall <- sum(pakistan$Rainfall)
+rainfall_percentage <- pakistan %>%
+  group_by(Month) %>%
+  summarise(Total_1901_2016 = sum(Rainfall), Percent = 100 * Total_1901_2016 / sum_rainfall)
+head(rainfall_percentage)
+```
+
+Finding the average amount of rainfall
+
+```{r}
+average_rainfall <- sum(pakistan$Rainfall)
+rainfall_average <- pakistan %>%
+  group_by(Month) %>%
+  mutate(Average_1901_2016 = mean(Rainfall))
+head(rainfall_average)
+```
+
+```{r}
+ggplot(pakistan, aes(Rainfall)) + geom_histogram(color = "lightblue", fill = "steelblue") + theme_minimal()
+```
+
+Saving image for media presentation
+
+```{r}
+ggsave("histogram.png")
+```
+
+```{r}
+ggplot(pakistan, aes(Year, Rainfall, color = Month)) + geom_point(alpha = 0.5) + geom_smooth(se = FALSE)
+```
+
+```{r}
+ggplot(pakistan, aes(Year, Rainfall, fill = Month)) + geom_bar(stat = "identity") + scale_fill_discrete(name = "Month", limits = month.name)
+```
+
+As expected, August and July have higher rainfall due to monsoons
+
+```{r}
+ggplot(rainfall_average, aes(Year, Rainfall, color = Month)) + geom_line(alpha = 0.8) + theme_minimal()
+```
+
+Saving image for media presentation
+
+```{r}
+ggsave("average.png")
+```
+
+```{r}
+ggplot(subset(pakistan, Month %in% c("June","July", "August")), aes(Year, Rainfall, color = Month)) + geom_line() + facet_wrap(~ Month)
+```
+
+Monsoon in 2010
+
+```{r}
+monsoon <- filter(pakistan, Month == c("July", "August"), Year == 2010)
+monsoon
+```
+
+```{r}
+ggplot(subset(pakistan, Month %in% c("June","July", "August")), aes(Year, Rainfall, color = Month)) + geom_line() + facet_wrap(~ Month) + geom_point(data = monsoon, aes(Year, Rainfall), color = "black", size = 2) + theme_minimal()
+```
+
+Saving image for media presentation
+
+```{r}
+ggsave("2010monsoon.png")
+```
+
+```{r}
+ggplot(subset(pakistan, Month %in% c("March","April", "May")), aes(Year, Rainfall, color = Month)) + geom_line() + facet_wrap(~ Month)
+```
+
+```{r}
+ggplot(subset(pakistan, Month %in% c("September","October", "November")), aes(Year, Rainfall, color = Month)) + geom_line() + facet_wrap(~ Month)
+```
+
+```{r}
+ggplot(subset(pakistan, Month %in% c("December","January", "February")), aes(Year, Rainfall, color = Month)) + geom_line() + facet_wrap(~ Month)
+```
+
+# Model Choosing
+
+For the sake of brevity, let's use a linear regression model to predict *Rainfall*. As seen above, the data is skewed so we can take log of *Rainfall,* however, implications can come a long with it making the data inaccurate.
+
+```{r}
+pakistan$log_rainfall <- log(pakistan$Rainfall)
+head(pakistan)
+```
+
+```{r}
+lm1 <- lm(log_rainfall ~ Year, data = pakistan)
+summary(lm1)
+```
+
+```{r}
+plot(lm1)
+```
+
+```{r}
+lm2 <- lm(log_rainfall ~ Year + Month, data = pakistan)
+summary(lm2)
+```
+
+Saving for media presentation
+
+```{r}
+save(lm2, file = "lm2.Rdata")
+```
+
+```{r}
+plot(lm2)
+```
+
+Now lets try predicting Rainfall for year 2017 and Month January
+
+Using model 1 first
+
+```{r}
+head(predict(lm1))
+```
+
+```{r}
+logged_prediction <- predict(lm1, data.frame(Year = 2017, Month = "January"))
+lm1_prediction <- exp(logged_prediction)
+lm1_prediction
+```
+
+Now using model 2
+
+```{r}
+head(predict(lm2))
+```
+
+```{r}
+logged_prediction2 <- predict(lm2, data.frame(Year = 2017, Month = "January"))
+lm2_prediction <- exp(logged_prediction2)
+lm2_prediction
+```
+
+We can take a look at accuracy, but for now this ends a quick example of how we can use data science to help predict rainfall.

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Rica Rebusit" />
+
+
+<title>Pakistan Rainfall Code</title>
+
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/darkly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Rica Rebusit</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Blog Posts
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="blog.html">First Blog</a>
+    </li>
+    <li>
+      <a href="tidymodel.html">Tidy Model Tutorial</a>
+    </li>
+    <li>
+      <a href="classification.html">Stroke Classification</a>
+    </li>
+    <li>
+      <a href="ANTH333Med.html">ANTH333 Media Presentation</a>
+    </li>
+    <li>
+      <a href="PakistanRainfallCode.html">Pakistan Rainfall Code</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/rrebusit">
+    <span class="fa fa-github"></span>
+     
+    Github
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Pakistan Rainfall Code</h1>
+<h4 class="author">Rica Rebusit</h4>
+<h4 class="date">3/20/2022</h4>
+
+</div>
+
+
+<p>Click here to go back to the ANTH333 media presentation: <a
+href="https://data485-s22.github.io/website-basic-rrebusit/ANTH333Med.html">Media
+Presentation</a></p>
+<div id="load-in-necessary-libraries" class="section level1">
+<h1>Load in Necessary Libraries</h1>
+<pre class="r"><code>library(tidyverse)</code></pre>
+</div>
+<div id="load-in-data" class="section level1">
+<h1>Load in Data</h1>
+<pre class="r"><code>pakistan &lt;- read.csv(&quot;~/Downloads/website-basic-rrebusit/Rainfall_1901_2016_PAK.csv&quot;)</code></pre>
+<p>The data is from kaggle and the link to it is right here -&gt; <a
+href="%22https://www.kaggle.com/datasets/zusmani/rainfall-in-pakistan%22">Click
+Me</a></p>
+<p>Information of Data:</p>
+<p>This data set has 3 variables:</p>
+<p><code>Rainfall - (MM)</code> - This is the recorded rainfall for the
+year and month at the time. Rainfall is measured in millimeters</p>
+<p><code>Year</code> - The year of each recorded rainfall. Contains 116
+years of recorded rainfall.</p>
+<p><code>Month</code> - The month of each recorded rainfall.</p>
+</div>
+<div id="exploratory-data-analysis" class="section level1">
+<h1>Exploratory Data Analysis</h1>
+<pre class="r"><code>str(pakistan)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    1392 obs. of  3 variables:
+##  $ Rainfall....MM.: num  40.4 12.3 25.5 14.3 38.3 ...
+##  $ Year           : int  1901 1901 1901 1901 1901 1901 1901 1901 1901 1901 ...
+##  $ Month          : chr  &quot;January&quot; &quot;February&quot; &quot;March&quot; &quot;April&quot; ...</code></pre>
+<pre class="r"><code>summary(pakistan)</code></pre>
+<pre><code>##  Rainfall....MM.         Year         Month          
+##  Min.   :  0.1058   Min.   :1901   Length:1392       
+##  1st Qu.:  9.5866   1st Qu.:1930   Class :character  
+##  Median : 19.6537   Median :1958   Mode  :character  
+##  Mean   : 25.1424   Mean   :1958                     
+##  3rd Qu.: 33.7531   3rd Qu.:1987                     
+##  Max.   :154.0550   Max.   :2016</code></pre>
+<pre class="r"><code>sum(is.na(pakistan))</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>head(pakistan)</code></pre>
+<pre><code>##   Rainfall....MM. Year    Month
+## 1         40.4258 1901  January
+## 2         12.3022 1901 February
+## 3         25.5119 1901    March
+## 4         14.2942 1901    April
+## 5         38.3046 1901      May
+## 6         12.8813 1901     June</code></pre>
+<p>Renaming <code>Rainfall - (MM)</code> to <code>Rainfall</code></p>
+<pre class="r"><code>pakistan &lt;- rename(pakistan, Rainfall = &#39;Rainfall....MM.&#39;)
+head(pakistan)</code></pre>
+<pre><code>##   Rainfall Year    Month
+## 1  40.4258 1901  January
+## 2  12.3022 1901 February
+## 3  25.5119 1901    March
+## 4  14.2942 1901    April
+## 5  38.3046 1901      May
+## 6  12.8813 1901     June</code></pre>
+<p>Sum the amount of rainfall from all the years and find the percentage
+rainfall for the month</p>
+<pre class="r"><code>sum_rainfall &lt;- sum(pakistan$Rainfall)
+rainfall_percentage &lt;- pakistan %&gt;%
+  group_by(Month) %&gt;%
+  summarise(Total_1901_2016 = sum(Rainfall), Percent = 100 * Total_1901_2016 / sum_rainfall)
+head(rainfall_percentage)</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   Month    Total_1901_2016 Percent
+##   &lt;chr&gt;              &lt;dbl&gt;   &lt;dbl&gt;
+## 1 April              2980.    8.52
+## 2 August             6010.   17.2 
+## 3 December           1726.    4.93
+## 4 February           3270.    9.34
+## 5 January            2986.    8.53
+## 6 July               6571.   18.8</code></pre>
+<p>Finding the average amount of rainfall</p>
+<pre class="r"><code>average_rainfall &lt;- sum(pakistan$Rainfall)
+rainfall_average &lt;- pakistan %&gt;%
+  group_by(Month) %&gt;%
+  mutate(Average_1901_2016 = mean(Rainfall))
+head(rainfall_average)</code></pre>
+<pre><code>## # A tibble: 6 × 4
+## # Groups:   Month [6]
+##   Rainfall  Year Month    Average_1901_2016
+##      &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;                &lt;dbl&gt;
+## 1     40.4  1901 January               25.7
+## 2     12.3  1901 February              28.2
+## 3     25.5  1901 March                 32.1
+## 4     14.3  1901 April                 25.7
+## 5     38.3  1901 May                   16.4
+## 6     12.9  1901 June                  16.9</code></pre>
+<pre class="r"><code>ggplot(pakistan, aes(Rainfall)) + geom_histogram(color = &quot;lightblue&quot;, fill = &quot;steelblue&quot;) + theme_minimal()</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value
+## with `binwidth`.</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Saving image for media presentation</p>
+<pre class="r"><code>ggsave(&quot;histogram.png&quot;)</code></pre>
+<pre><code>## Saving 7 x 5 in image
+## `stat_bin()` using `bins = 30`. Pick better value
+## with `binwidth`.</code></pre>
+<pre class="r"><code>ggplot(pakistan, aes(Year, Rainfall, color = Month)) + geom_point(alpha = 0.5) + geom_smooth(se = FALSE)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula
+## = &#39;y ~ x&#39;</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(pakistan, aes(Year, Rainfall, fill = Month)) + geom_bar(stat = &quot;identity&quot;) + scale_fill_discrete(name = &quot;Month&quot;, limits = month.name)</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>As expected, August and July have higher rainfall due to monsoons</p>
+<pre class="r"><code>ggplot(rainfall_average, aes(Year, Rainfall, color = Month)) + geom_line(alpha = 0.8) + theme_minimal()</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Saving image for media presentation</p>
+<pre class="r"><code>ggsave(&quot;average.png&quot;)</code></pre>
+<pre><code>## Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggplot(subset(pakistan, Month %in% c(&quot;June&quot;,&quot;July&quot;, &quot;August&quot;)), aes(Year, Rainfall, color = Month)) + geom_line() + facet_wrap(~ Month)</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>Monsoon in 2010</p>
+<pre class="r"><code>monsoon &lt;- filter(pakistan, Month == c(&quot;July&quot;, &quot;August&quot;), Year == 2010)
+monsoon</code></pre>
+<pre><code>##   Rainfall Year  Month
+## 1  105.220 2010   July
+## 2  113.186 2010 August</code></pre>
+<pre class="r"><code>ggplot(subset(pakistan, Month %in% c(&quot;June&quot;,&quot;July&quot;, &quot;August&quot;)), aes(Year, Rainfall, color = Month)) + geom_line() + facet_wrap(~ Month) + geom_point(data = monsoon, aes(Year, Rainfall), color = &quot;black&quot;, size = 2) + theme_minimal()</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Saving image for media presentation</p>
+<pre class="r"><code>ggsave(&quot;2010monsoon.png&quot;)</code></pre>
+<pre><code>## Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggplot(subset(pakistan, Month %in% c(&quot;March&quot;,&quot;April&quot;, &quot;May&quot;)), aes(Year, Rainfall, color = Month)) + geom_line() + facet_wrap(~ Month)</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(subset(pakistan, Month %in% c(&quot;September&quot;,&quot;October&quot;, &quot;November&quot;)), aes(Year, Rainfall, color = Month)) + geom_line() + facet_wrap(~ Month)</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(subset(pakistan, Month %in% c(&quot;December&quot;,&quot;January&quot;, &quot;February&quot;)), aes(Year, Rainfall, color = Month)) + geom_line() + facet_wrap(~ Month)</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+<div id="model-choosing" class="section level1">
+<h1>Model Choosing</h1>
+<p>For the sake of brevity, let’s use a linear regression model to
+predict <em>Rainfall</em>. As seen above, the data is skewed so we can
+take log of <em>Rainfall,</em> however, implications can come a long
+with it making the data inaccurate.</p>
+<pre class="r"><code>pakistan$log_rainfall &lt;- log(pakistan$Rainfall)
+head(pakistan)</code></pre>
+<pre><code>##   Rainfall Year    Month log_rainfall
+## 1  40.4258 1901  January     3.699468
+## 2  12.3022 1901 February     2.509778
+## 3  25.5119 1901    March     3.239145
+## 4  14.2942 1901    April     2.659854
+## 5  38.3046 1901      May     3.645570
+## 6  12.8813 1901     June     2.555777</code></pre>
+<pre class="r"><code>lm1 &lt;- lm(log_rainfall ~ Year, data = pakistan)
+summary(lm1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = log_rainfall ~ Year, data = pakistan)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.9273 -0.5422  0.1853  0.7234  2.3584 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept) -2.1750568  1.7010844  -1.279  0.20124   
+## Year         0.0025334  0.0008684   2.917  0.00359 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.085 on 1390 degrees of freedom
+## Multiple R-squared:  0.006085,   Adjusted R-squared:  0.00537 
+## F-statistic:  8.51 on 1 and 1390 DF,  p-value: 0.003589</code></pre>
+<pre class="r"><code>plot(lm1)</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-25-1.png" width="672" /><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-25-2.png" width="672" /><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-25-3.png" width="672" /><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-25-4.png" width="672" /></p>
+<pre class="r"><code>lm2 &lt;- lm(log_rainfall ~ Year + Month, data = pakistan)
+summary(lm2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = log_rainfall ~ Year + Month, data = pakistan)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.8009 -0.3886  0.0746  0.5090  2.1102 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    -1.848127   1.212448  -1.524  0.12766    
+## Year            0.002533   0.000618   4.099 4.38e-05 ***
+## MonthAugust     0.662618   0.101376   6.536 8.86e-11 ***
+## MonthDecember  -0.816166   0.101376  -8.051 1.76e-15 ***
+## MonthFebruary   0.022821   0.101376   0.225  0.82193    
+## MonthJanuary   -0.100026   0.101376  -0.987  0.32397    
+## MonthJuly       0.766003   0.101376   7.556 7.54e-14 ***
+## MonthJune      -0.457655   0.101376  -4.514 6.89e-06 ***
+## MonthMarch      0.203421   0.101376   2.007  0.04499 *  
+## MonthMay       -0.464082   0.101376  -4.578 5.12e-06 ***
+## MonthNovember  -1.961016   0.101376 -19.344  &lt; 2e-16 ***
+## MonthOctober   -1.483168   0.101376 -14.630  &lt; 2e-16 ***
+## MonthSeptember -0.295909   0.101376  -2.919  0.00357 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.7721 on 1379 degrees of freedom
+## Multiple R-squared:  0.5007, Adjusted R-squared:  0.4963 
+## F-statistic: 115.2 on 12 and 1379 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Saving for media presentation</p>
+<pre class="r"><code>save(lm2, file = &quot;lm2.Rdata&quot;)</code></pre>
+<pre class="r"><code>plot(lm2)</code></pre>
+<p><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-28-1.png" width="672" /><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-28-2.png" width="672" /><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-28-3.png" width="672" /><img src="PakistanRainfallCode_files/figure-html/unnamed-chunk-28-4.png" width="672" /></p>
+<p>Now lets try predicting Rainfall for year 2017 and Month January</p>
+<p>Using model 1 first</p>
+<pre class="r"><code>head(predict(lm1))</code></pre>
+<pre><code>##       1       2       3       4       5       6 
+## 2.64092 2.64092 2.64092 2.64092 2.64092 2.64092</code></pre>
+<pre class="r"><code>logged_prediction &lt;- predict(lm1, data.frame(Year = 2017, Month = &quot;January&quot;))
+lm1_prediction &lt;- exp(logged_prediction)
+lm1_prediction</code></pre>
+<pre><code>##        1 
+## 18.81761</code></pre>
+<p>Now using model 2</p>
+<pre class="r"><code>head(predict(lm2))</code></pre>
+<pre><code>##        1        2        3        4        5        6 
+## 2.867824 2.990671 3.171271 2.967850 2.503768 2.510194</code></pre>
+<pre class="r"><code>logged_prediction2 &lt;- predict(lm2, data.frame(Year = 2017, Month = &quot;January&quot;))
+lm2_prediction &lt;- exp(logged_prediction2)
+lm2_prediction</code></pre>
+<pre><code>##        1 
+## 23.61064</code></pre>
+<p>We can take a look at accuracy, but for now this ends a quick example
+of how we can use data science to help predict rainfall.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
