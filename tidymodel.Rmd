@@ -19,7 +19,7 @@ library(dplyr)
 ```
 Let's load the data. You can get it from here: [Abalone Data Set](https://www.kaggle.com/datasets/rodolfomendes/abalone-dataset)
 ```{r}
-abalone <- read.csv("~/Downloads/abalone.csv")
+abalone <- read.csv("~/Documents/RicaRebusitWeb/abalone.csv")
 head(abalone)
 ```
 

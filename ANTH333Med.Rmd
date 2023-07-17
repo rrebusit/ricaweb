@@ -1,7 +1,7 @@
 ---
 title: "ANTH333 Media Presentation"
 author: "Rica Rebusit"
-date: "5/7/2022"
+date: "5/7/2023"
 output:
   html_document:
     theme: darkly
@@ -21,17 +21,17 @@ In this media presentation, we will mostly focus on the climate change part of D
 
 Climate change is a change in the usual weather experienced in a place. For example, deforestation can cause climate change where when trees are cut down and burned or simply allowed to rot, carbon is released into the air as carbon dioxide therefore increasing the earths temperature.
 
-<center>![Image of deforestation from Los Angeles Times](~/Downloads/website-basic-rrebusit/deforestation.jpeg)</center>
+<center>![Image of deforestation from Los Angeles Times](~/Documents/RicaRebusitWeb/deforestation.jpeg)</center>
 
 Examples such as deforestation can cause a chain reaction of collapse where deforestation is environmental damage, which causes climate change, and can lead to hostile neighbors and lost of friendly neighbors where the society does not know how to react to fix these problems.
 
 # Pakistan and Climate Change
 
-<center>![Image of Pakistan from Nations Online Project](~/Downloads/website-basic-rrebusit/pakistan.jpeg)</center>
+<center>![Image of Pakistan from Nations Online Project](~/Documents/RicaRebusitWeb/pakistan.jpeg)</center>
 
 Home of 231 million people, Pakistan is located in Southern Asia. Along the coast of the Arabian Sea, it is hot and dry, and cold up north towards the Himalayas. This contrast of weather is a reason for Pakistan's climate change and causes monsoons.
 
-<center>![People affected from monsoon Image from CNN](~/Downloads/website-basic-rrebusit/monsoon.jpeg)</center>
+<center>![People affected from monsoon Image from CNN](~/Documents/RicaRebusitWeb/monsoon.jpeg)</center>
 
 Monsoons in Pakistan are so severe and mostly occur during the summer time. Heavy rainfall has many impacts
 
@@ -51,7 +51,7 @@ During monsoon seasons, people in Pakistan experience
 
 -   Diseases
 
-<center>![Tending to the sick, Image from AP News](~/Downloads/website-basic-rrebusit/ill.jpeg)</center>
+<center>![Tending to the sick, Image from AP News](~/Documents/RicaRebusitWeb/ill.jpeg)</center>
 
 In 2010, Pakistan endured 12.9 billion dollars of damage caused from monsoons and heavy rainfall.
 
@@ -69,7 +69,7 @@ In 2010, Pakistan endured 12.9 billion dollars of damage caused from monsoons an
 
 -   700 thousand livestock lost
 
-<center>![Livestock struggling in floods, Image from ProPakistani](~/Downloads/website-basic-rrebusit/livestock.jpeg)</center>
+<center>![Livestock struggling in floods, Image from ProPakistani](~/Documents/RicaRebusitWeb/livestock.jpeg)</center>
 
 # How to Help Prevent Pakistan's Climate Change Problems
 
@@ -99,16 +99,16 @@ Let's perform some brief exploratory data analysis and if you want to check out 
 
 We can take a look at the histogram of the rainfall
 
-<center>![Histogram](~/Downloads/website-basic-rrebusit/histogram.png){width="600"}</center>
+<center>![Histogram](~/Documents/RicaRebusitWeb/histogram.png){width="600"}</center>
 
 We can also take a look at the average amount of rainfall during these years and months
 
-<center>![Average](~/Downloads/website-basic-rrebusit/average.png)</center>
+<center>![Average](~/Documents/RicaRebusitWeb/average.png)</center>
 
 Once we have performed exploratory data analysis, we can select a model to visualize how to predict rainfall. To keep it simple, we can use a linear regression model which "\...is a supervised learning algorithm that compares input (X) and output (Y) variables based on labeled data [which is] used for finding the relationship between the two variables and predicting future results based on past relationships."
 
 ```{r, echo = FALSE}
-load("~/Downloads/website-basic-rrebusit/lm2.Rdata")
+load("~/Documents/RicaRebusitWeb/lm2.Rdata")
 ```
 
 ```{r}
@@ -135,7 +135,7 @@ lm2_prediction
 
 Our model predicted 23 mm of rainfall for January 2017. Let's see if it is somewhat accurate to real records
 
-<center>![Rainfall from January 2017, recorded by National Centers for Environmental Information](~/Downloads/website-basic-rrebusit/2017prediction.png){width="600"}</center>
+<center>![Rainfall from January 2017, recorded by National Centers for Environmental Information](~/Documents/RicaRebusitWeb/2017prediction.png){width="600"}</center>
 
 As expected, the model overshot by a little bit, but many factors include, how a data scientist approaches the problem, the type of data they use, and how much data is used. Ideally we would want more than 116 years of records to predict that way it would be more accurate.
 
@@ -143,7 +143,7 @@ As expected, the model overshot by a little bit, but many factors include, how a
 
 Pakistan could have experienced two other factors of collapse: loss of friendly neighbors and how the society responds. Luckily, they have donations from the United Nations to help with the people affected by health conditions caused by the monsoons.
 
-<center>![UNICEF, Image from Diplomatic News Agency](~/Downloads/website-basic-rrebusit/help.jpeg)</center>
+<center>![UNICEF, Image from Diplomatic News Agency](~/Documents/RicaRebusitWeb/help.jpeg)</center>
 
 Pakistan's government also have contributed to the donations as well.
 
@@ -153,7 +153,7 @@ Pakistan goes through the climate change factor of collapse, they go through hea
 
 <center>
 
-![ ](~/Downloads/website-basic-rrebusit/thanks.png)
+![ ](~/Documents/RicaRebusitWeb/thanks.png)
 
 </center>
 

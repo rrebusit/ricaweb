@@ -1,10 +1,35 @@
 ---
 title: "My Introduction"
+output:
+  html_document:
+    theme: darkly
 ---
 
-Welcome to my website! Thank you for viewing
+Welcome to my website! Thank you for viewing and click on the *Blog Posts* tab above to check out some of my personal interests and projects about data science!
 
 ## Some things about me: 
-I am an Applied Math major at Chico State 
-I have many hobbies that include traveling, playing the ukulele, playing basketball, and watching anime
-etc... participated in Chico State's NSC Poster Session 2022 and NSC Poster Session 2023 ...  to be continued
+I graduated CSU Chico of May 2023 with a B.S. in Applied Mathematics and the certificate of Data Science. At my time at Chico State, one of my professors recommended I engage in the Data Science Initiative where I soon began to take part in projects that were presented in Chico State's NSC Poster Sessions.
+
+<center>
+![Chico State NSC Poster Session 2022](~/Documents/RicaRebusitWeb/siposter.png){width="1000"}
+</center>
+
+<center>
+![Chico State NSC Poster Session 2023](~/Documents/RicaRebusitWeb/chcposter.png){width="1000"}
+</center>
+
+This helped me as I gained more experience with real clients and helped me realize what I am strong at and what I need to work more at. I am interested in machine learning and I am fond of Random Forest Classification.
+
+Aside from data science, I have other hobbies such as:
+
+-   Traveling
+
+-   Playing the guitar
+
+-   Sports
+
+-   Fitness
+
+-   Watching anime
+
+-   Playing with my dog

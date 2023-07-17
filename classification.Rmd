@@ -52,7 +52,7 @@ First we will need to clean the data set if needed so that the data is not messy
 
 Let's load in the data set
 ```{r}
-stroke <- read.csv("~/Downloads/healthcare-dataset-stroke-data.csv")
+stroke <- read.csv("~/Documents/RicaRebusitWeb/healthcare-dataset-stroke-data.csv")
 ```
 
 Now we will check the summary statistics

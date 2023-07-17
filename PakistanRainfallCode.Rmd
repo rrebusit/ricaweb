@@ -1,7 +1,7 @@
 ---
 title: "Pakistan Rainfall Code"
 author: "Rica Rebusit"
-date: "5/7/2022"
+date: "5/7/2023"
 output:
   html_document:
     theme: darkly
@@ -22,10 +22,10 @@ library(tidyverse)
 # Load in Data
 
 ```{r}
-pakistan <- read.csv("~/Downloads/website-basic-rrebusit/Rainfall_1901_2016_PAK.csv")
+pakistan <- read.csv("~/Documents/RicaRebusitWeb/Rainfall_1901_2016_PAK.csv")
 ```
 
-The data is from kaggle and the link to it is right here -\> [Click Me](%22https://www.kaggle.com/datasets/zusmani/rainfall-in-pakistan%22)
+The data is from kaggle and the link to it is right here -\> [Click Me](https://www.kaggle.com/datasets/zusmani/rainfall-in-pakistan)
 
 Information of Data:
 
