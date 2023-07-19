@@ -1,0 +1,12 @@
+---
+title: "SI Poster"
+author: "Rica Rebusit"
+date: "5/2/2022"
+output:
+  html_document:
+    theme: darkly
+---
+
+<center>
+![Chico State NSC Poster Session 2022](~/Documents/RicaRebusitWeb/siposter.png){height=670px}
+</center>

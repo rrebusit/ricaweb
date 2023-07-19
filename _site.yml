@@ -17,6 +17,12 @@ navbar:
         href: ANTH333Med.html
       - text: "Pakistan Rainfall Code"
         href: PakistanRainfallCode.html
+    - text: "Project Posters"
+      menue:
+      - text: "SI Poster"
+        href: siposter.html
+      - text: "CHC Poster"
+        href: chcposter.html
   right:
     - text: "Github"
       icon: fa-github

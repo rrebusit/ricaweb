@@ -1,0 +1,12 @@
+---
+title: "CHC Poster"
+author: "Rica Rebusit"
+date: "5/2/2023"
+output:
+  html_document:
+    theme: darkly
+---
+
+<center>
+![Chico State NSC Poster Session 2023](~/Documents/RicaRebusitWeb/chcposter.png)
+</center>
