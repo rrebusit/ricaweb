@@ -95,7 +95,7 @@ Now we collect data. We will use this data set from kaggle: [Rainfall in Pakista
 
 This data set has an accumulation of 116 years of recorded rainfall from 1901 to 2016
 
-Let's perform some brief exploratory data analysis and if you want to check out the full process, click this link: [Pakistan Rainfall Code](https://data485-s22.github.io/website-basic-rrebusit/PakistanRainfallCode.html)
+Let's perform some brief exploratory data analysis and if you want to check out the full process, click this link: [Pakistan Rainfall Code](https://ricarebusitweb.netlify.app/pakistanrainfallcode)
 
 We can take a look at the histogram of the rainfall
 
